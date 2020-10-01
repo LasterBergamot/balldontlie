@@ -1,0 +1,7 @@
+server:
+  port: 8080
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://balldontlie:Nsxl6IUQToIxrQxL@balldontlie.flksr.mongodb.net/balldontlie?retryWrites=true&w=majority
