@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -29,7 +31,6 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public void getAllPlayersFromBalldontlieAPI() {
-        log.info("Getting all players!");
         PlayerDTOWrapper playerDTOWrapper = restTemplate
                 .getForObject(String.format("https://www.balldontlie.io/api/v1/players?per_page=100&page=%d", 1), PlayerDTOWrapper.class);
 
@@ -44,19 +45,21 @@ public class PlayerServiceImpl implements PlayerService {
         if (currentlySavedPlayers.size() < meta.getTotalCount()) {
             log.info("New players are available!");
 
-            List<CompletableFuture<PlayerDTOWrapper>> completableFutureList = createCompletableFutureFromTheAPICalls(meta.getTotalPages());
+            List<CompletableFuture<PlayerDTOWrapper>> completableFutureList = createCompletableFuturesFromTheAPICalls(meta.getTotalPages());
             CompletableFuture<List<PlayerDTOWrapper>> allCompletableFuture = collectReturnValuesFromAllThreads(completableFutureList);
             List<Player> playersFromAPI = getPlayersFromAPI(playerDTOWrapper, allCompletableFuture);
 
-            playersFromAPI.removeAll(currentlySavedPlayers);
-            playerRepository.saveAll(playersFromAPI);
-            log.info("Saved {} new players!", playersFromAPI.size());
+            Set<Player> playersToSave = new HashSet<>(currentlySavedPlayers);
+            playersToSave.addAll(playersFromAPI);
+
+            playerRepository.saveAll(List.copyOf(playersToSave));
+            log.info("Saved {} new players!", playersToSave.size());
         } else {
             log.info("No new players are available!");
         }
     }
 
-    private List<CompletableFuture<PlayerDTOWrapper>> createCompletableFutureFromTheAPICalls(int totalPages) {
+    private List<CompletableFuture<PlayerDTOWrapper>> createCompletableFuturesFromTheAPICalls(int totalPages) {
         List<CompletableFuture<PlayerDTOWrapper>> completableFutureList = new ArrayList<>();
 
         for (int currentPage = 2; currentPage <= totalPages; currentPage++) {

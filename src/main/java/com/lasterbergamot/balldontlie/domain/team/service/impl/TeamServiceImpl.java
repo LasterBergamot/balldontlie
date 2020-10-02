@@ -10,8 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -24,7 +26,6 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public void getAllTeamsFromBalldontlieAPI() {
-        log.info("Getting all teams!");
         TeamDTOWrapper teamDTOWrapper = restTemplate.getForObject("https://www.balldontlie.io/api/v1/teams?per_page=100", TeamDTOWrapper.class);
 
         Optional.ofNullable(teamDTOWrapper)
@@ -38,10 +39,11 @@ public class TeamServiceImpl implements TeamService {
             log.info("New teams available!");
 
             List<Team> teamsFromAPI = teamTransformer.transformTeamDTOListToTeamList(teamDTOWrapper.getTeamDTOs());
-            teamsFromAPI.removeAll(currentlyStoredTeams);
+            Set<Team> teamsToSave = new HashSet<>(currentlyStoredTeams);
+            teamsToSave.addAll(teamsFromAPI);
 
-            log.info("New teams: " + teamsFromAPI);
-            teamRepository.saveAll(teamsFromAPI);
+            teamRepository.saveAll(List.copyOf(teamsToSave));
+            log.info("Saved {} new teams!", teamsToSave.size());
         } else {
             log.info("No new teams available!");
         }
