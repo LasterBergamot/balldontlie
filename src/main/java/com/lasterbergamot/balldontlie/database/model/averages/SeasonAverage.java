@@ -15,7 +15,7 @@ import java.util.Objects;
 @Setter
 @Builder
 @ToString
-public class SeasonAverages {
+public class SeasonAverage {
 
     @Id
     private String id;
@@ -105,7 +105,7 @@ public class SeasonAverages {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SeasonAverages that = (SeasonAverages) o;
+        SeasonAverage that = (SeasonAverage) o;
         return Objects.equals(id, that.id);
     }
 

@@ -1,9 +1,11 @@
 package com.lasterbergamot.balldontlie.database.model.player;
 
+import com.lasterbergamot.balldontlie.database.model.averages.SeasonAverage;
 import com.lasterbergamot.balldontlie.database.model.team.Team;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -47,6 +49,10 @@ public class Player {
     @OneToOne
     @JoinColumn(name = "team_id")
     private Team team;
+
+    @NonNull
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "player")
+    private List<SeasonAverage> seasonAverages;
 
     @Override
     public boolean equals(Object o) {
