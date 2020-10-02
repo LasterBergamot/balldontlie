@@ -48,15 +48,12 @@ public class Player {
     @Column(name = "player_position")
     private String position;
 
-    @NonNull
     @Column(name = "height_feet")
     private Integer heightFeet;
 
-    @NonNull
     @Column(name = "height_inches")
     private Integer heightInches;
 
-    @NonNull
     @Column(name = "weight_pounds")
     private Integer weightPounds;
 

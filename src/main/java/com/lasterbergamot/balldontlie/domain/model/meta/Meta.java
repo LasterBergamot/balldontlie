@@ -1,4 +1,4 @@
-package com.lasterbergamot.balldontlie.domain.team.model;
+package com.lasterbergamot.balldontlie.domain.model.meta;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

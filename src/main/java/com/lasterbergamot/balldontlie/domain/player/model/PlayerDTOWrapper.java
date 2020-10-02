@@ -1,4 +1,4 @@
-package com.lasterbergamot.balldontlie.domain.team.model;
+package com.lasterbergamot.balldontlie.domain.player.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lasterbergamot.balldontlie.domain.model.meta.Meta;
@@ -11,10 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @ToString
-public class TeamDTOWrapper {
+public class PlayerDTOWrapper {
 
     @JsonProperty("data")
-    private List<TeamDTO> teamDTOs;
+    private List<PlayerDTO> playerDTOs;
 
     @JsonProperty("meta")
     private Meta meta;

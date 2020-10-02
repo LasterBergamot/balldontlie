@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS player (
     first_name      TEXT    NOT NULL,
     last_name       TEXT    NOT NULL,
     player_position TEXT    NOT NULL,
-    height_feet     INTEGER NOT NULL,
-    height_inches   INTEGER NOT NULL,
-    weight_pounds   INTEGER NOT NULL,
+    height_feet     INTEGER,
+    height_inches   INTEGER,
+    weight_pounds   INTEGER,
     team_id         INTEGER NOT NULL
 );
 
