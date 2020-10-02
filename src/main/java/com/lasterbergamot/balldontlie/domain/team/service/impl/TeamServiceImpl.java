@@ -3,12 +3,14 @@ package com.lasterbergamot.balldontlie.domain.team.service.impl;
 import com.lasterbergamot.balldontlie.database.model.team.Team;
 import com.lasterbergamot.balldontlie.database.repository.team.TeamRepository;
 import com.lasterbergamot.balldontlie.domain.team.model.TeamDTO;
+import com.lasterbergamot.balldontlie.domain.team.model.TeamDTOWrapper;
 import com.lasterbergamot.balldontlie.domain.team.service.TeamService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -24,9 +26,31 @@ public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
 
     private final RestTemplate restTemplate;
-    
+
+    @PostConstruct
     @Override
-    public void getAllTeams() throws ExecutionException, InterruptedException {
+    public void getAllTeams() {
+        List<Team> currentlyStoredTeams = teamRepository.findAll();
+        TeamDTOWrapper teamDTOWrapper = restTemplate.getForObject("https://www.balldontlie.io/api/v1/teams/", TeamDTOWrapper.class);
+
+        if (teamDTOWrapper != null) {
+            if (currentlyStoredTeams.size() < teamDTOWrapper.getMeta().getTotalCount()) {
+                log.info("New teams available!");
+
+                List<Team> teamsFromAPI = transformTeamDTOListToTeamList(teamDTOWrapper.getTeamDTOs());
+                teamsFromAPI.removeAll(currentlyStoredTeams);
+
+                log.info("New teams: " + teamsFromAPI);
+                teamRepository.saveAll(teamsFromAPI);
+            } else {
+                log.info("No new teams available!");
+            }
+        } else {
+            log.error("The TeamDTOWrapper object got from the API was null!");
+        }
+    }
+
+    public void asd() throws ExecutionException, InterruptedException {
         log.info("Getting all teams!");
         List<Team> currentlySavedTeams = teamRepository.findAll();
         System.out.println("currentlySavedTeams: " + currentlySavedTeams);
