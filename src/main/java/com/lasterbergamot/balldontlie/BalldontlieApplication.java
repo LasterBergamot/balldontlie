@@ -20,7 +20,7 @@ public class BalldontlieApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		teamService.getAllTeams();
-		playerService.getAllPlayers();
+		teamService.getAllTeamsFromBalldontlieAPI();
+		playerService.getAllPlayersFromBalldontlieAPI();
 	}
 }

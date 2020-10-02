@@ -1,13 +1,11 @@
 package com.lasterbergamot.balldontlie.domain.player.service.impl;
 
 import com.lasterbergamot.balldontlie.database.model.player.Player;
-import com.lasterbergamot.balldontlie.database.model.team.Team;
 import com.lasterbergamot.balldontlie.database.repository.player.PlayerRepository;
 import com.lasterbergamot.balldontlie.domain.model.meta.Meta;
-import com.lasterbergamot.balldontlie.domain.player.model.PlayerDTO;
 import com.lasterbergamot.balldontlie.domain.player.model.PlayerDTOWrapper;
 import com.lasterbergamot.balldontlie.domain.player.service.PlayerService;
-import com.lasterbergamot.balldontlie.domain.team.model.TeamDTO;
+import com.lasterbergamot.balldontlie.domain.player.transform.PlayerTransformer;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,10 +24,11 @@ import java.util.stream.Collectors;
 public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerRepository playerRepository;
+    private final PlayerTransformer playerTransformer;
     private final RestTemplate restTemplate;
 
     @Override
-    public void getAllPlayers() {
+    public void getAllPlayersFromBalldontlieAPI() {
         log.info("Getting all players!");
         PlayerDTOWrapper playerDTOWrapper = restTemplate
                 .getForObject(String.format("https://www.balldontlie.io/api/v1/players?per_page=100&page=%d", 1),
@@ -108,45 +107,12 @@ public class PlayerServiceImpl implements PlayerService {
             playerDTOWrappers.add(0, playerDTOWrapper);
 
             playerDTOWrappers.forEach(
-                    playerDTOWrapper1 -> playersFromAPI.addAll(transformPlayerDTOListToPlayerList(playerDTOWrapper1.getPlayerDTOs()))
+                    playerDTOWrapper1 -> playersFromAPI.addAll(playerTransformer.transformPlayerDTOListToPlayerList(playerDTOWrapper1.getPlayerDTOs()))
             );
         } catch (ExecutionException | InterruptedException exception) {
             log.error(exception.getMessage());
         }
 
         return playersFromAPI;
-    }
-
-    private List<Player> transformPlayerDTOListToPlayerList(List<PlayerDTO> playerDTOS) {
-        return playerDTOS
-                .stream()
-                .map(this::transformPlayerDTOToPlayer)
-                .collect(Collectors.toUnmodifiableList());
-    }
-
-    private Player transformPlayerDTOToPlayer(PlayerDTO playerDTO) {
-        return Player.builder()
-                .id(playerDTO.getId())
-                .firstName(playerDTO.getFirstName())
-                .lastName(playerDTO.getLastName())
-                .heightFeet(playerDTO.getHeightFeet())
-                .heightInches(playerDTO.getHeightInches())
-                .position(playerDTO.getPosition())
-                .weightPounds(playerDTO.getWeightPounds())
-                .team(transformTeamDTOToTeam(playerDTO.getTeam()))
-                .seasonAverages(new ArrayList<>())
-                .build();
-    }
-
-    private Team transformTeamDTOToTeam(TeamDTO teamDTO) {
-        return Team.builder()
-                .id(teamDTO.getId())
-                .abbreviation(teamDTO.getAbbreviation())
-                .city(teamDTO.getCity())
-                .conference(teamDTO.getConference())
-                .division(teamDTO.getDivision())
-                .fullName(teamDTO.getFullName())
-                .name(teamDTO.getName())
-                .build();
     }
 }
