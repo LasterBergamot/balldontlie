@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -25,8 +24,7 @@ public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
 
     private final RestTemplate restTemplate;
-
-    @PostConstruct
+    
     @Override
     public void getAllTeams() throws ExecutionException, InterruptedException {
         log.info("Getting all teams!");

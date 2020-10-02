@@ -2,12 +2,13 @@ package com.lasterbergamot.balldontlie.database.model.game;
 
 import com.lasterbergamot.balldontlie.database.model.team.Team;
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
-@Document(collection = "games")
+@Entity
+@Table(name = "games")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -16,16 +17,43 @@ import java.util.Objects;
 @ToString
 public class Game {
 
+    @Id
     private Integer id;
+
+    @NonNull
     private LocalDate date;
+
+    @NonNull
+    @Column(name = "home_team_score")
     private Integer homeTeamScore;
+
+    @NonNull
+    @Column(name = "visitor_team_score")
     private Integer visitorTeamScore;
+
+    @NonNull
     private Integer season;
+
+    @NonNull
     private Integer period;
+
+    @NonNull
     private String status;
+
+    @NonNull
     private String time;
+
+    @NonNull
     private Boolean postseason;
+
+    @NonNull
+    @OneToOne
+    @JoinColumn(name = "home_team_id")
     private Team homeTeam;
+
+    @NonNull
+    @OneToOne
+    @JoinColumn(name = "visitor_team_id")
     private Team visitorTeam;
 
     @Override

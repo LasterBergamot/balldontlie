@@ -1,11 +1,15 @@
 package com.lasterbergamot.balldontlie.database.model.team;
 
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
-@Document(collection = "teams")
+@Entity
+@Table(name = "teams")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -14,12 +18,27 @@ import java.util.Objects;
 @ToString
 public class Team {
 
+    @Id
+    @Setter(AccessLevel.NONE)
     private Integer id;
+
+    @NonNull
     private String abbreviation;
+
+    @NonNull
     private String city;
+
+    @NonNull
     private String conference;
+
+    @NonNull
     private String division;
+
+    @NonNull
+    @Column(name = "full_name")
     private String fullName;
+
+    @NonNull
     private String name;
 
     @Override
