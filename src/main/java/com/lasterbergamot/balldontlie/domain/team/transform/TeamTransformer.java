@@ -14,7 +14,7 @@ public class TeamTransformer {
         return teamDTOList
                 .stream()
                 .map(this::transformTeamDTOToTeam)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public Team transformTeamDTOToTeam(TeamDTO teamDTO) {

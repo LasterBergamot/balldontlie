@@ -63,7 +63,7 @@ public class PlayerServiceImpl implements PlayerService {
             int finalCurrentPage = currentPage;
             CompletableFuture<PlayerDTOWrapper> completableFuture = CompletableFuture.supplyAsync(
                     () -> restTemplate
-                            .getForObject("https://www.balldontlie.io/api/v1/players?per_page=100&page=" + finalCurrentPage,
+                            .getForObject(String.format("https://www.balldontlie.io/api/v1/players?per_page=100&page=%d", finalCurrentPage),
                                     PlayerDTOWrapper.class)
             );
 
