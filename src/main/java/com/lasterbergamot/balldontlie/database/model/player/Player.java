@@ -62,8 +62,9 @@ public class Player {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    //TODO: change to FetchType.LAZY => handle it
     @NonNull
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "player")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "player")
     private List<SeasonAverage> seasonAverages;
 
     @Override
