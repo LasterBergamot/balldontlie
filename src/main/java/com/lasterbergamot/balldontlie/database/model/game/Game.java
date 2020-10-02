@@ -1,9 +1,21 @@
 package com.lasterbergamot.balldontlie.database.model.game;
 
 import com.lasterbergamot.balldontlie.database.model.team.Team;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -18,6 +30,7 @@ import java.util.Objects;
 public class Game {
 
     @Id
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     @NonNull

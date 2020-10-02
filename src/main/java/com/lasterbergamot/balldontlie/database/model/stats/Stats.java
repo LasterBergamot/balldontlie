@@ -3,10 +3,23 @@ package com.lasterbergamot.balldontlie.database.model.stats;
 import com.lasterbergamot.balldontlie.database.model.game.Game;
 import com.lasterbergamot.balldontlie.database.model.player.Player;
 import com.lasterbergamot.balldontlie.database.model.team.Team;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.Objects;
+
 
 @Entity
 @Table(name = "stats")
@@ -19,6 +32,7 @@ import java.util.Objects;
 public class Stats {
 
     @Id
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     @NonNull

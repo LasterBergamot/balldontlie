@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS team (
     conference      TEXT    NOT NULL,
     division        TEXT    NOT NULL,
     full_name       TEXT    NOT NULL,
-    name            TEXT    NOT NULL,
+    name            TEXT    NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS player (
@@ -46,17 +46,17 @@ CREATE TABLE IF NOT EXISTS stats (
     offensive_rebounds          INTEGER NOT NULL,
     blocks                      INTEGER NOT NULL,
     steals                      INTEGER NOT NULL,
-    turnovers                   INTEGER NOT NULL,
-    personal_fouls              INTEGER NOT NULL,
-    field_goals_attempted       INTEGER NOT NULL,
-    field_goals_made            INTEGER NOT NULL,
-    field_goal_percentage       DOUBLE  NOT NULL,
+    turnovers                   INTEGER             NOT NULL,
+    personal_fouls              INTEGER             NOT NULL,
+    field_goals_attempted       INTEGER             NOT NULL,
+    field_goals_made            INTEGER             NOT NULL,
+    field_goal_percentage       DOUBLE PRECISION    NOT NULL,
     three_pointers_attempted    INTEGER NOT NULL,
     three_pointers_made         INTEGER NOT NULL,
-    three_pointer_percentage    DOUBLE  NOT NULL,
+    three_pointer_percentage    DOUBLE PRECISION  NOT NULL,
     free_throws_attempted       INTEGER NOT NULL,
     free_throws_made            INTEGER NOT NULL,
-    free_throw_percentage       DOUBLE  NOT NULL
+    free_throw_percentage       DOUBLE PRECISION  NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS season_average (
@@ -65,22 +65,22 @@ CREATE TABLE IF NOT EXISTS season_average (
     games_played                INTEGER                                 NOT NULL,
     season                      INTEGER                                 NOT NULL,
     minutes                     TEXT                                    NOT NULL,
-    points                      DOUBLE                                  NOT NULL,
-    assists                     DOUBLE                                  NOT NULL,
-    rebounds                    DOUBLE                                  NOT NULL,
-    defensive_rebounds          DOUBLE                                  NOT NULL,
-    offensive_rebounds          DOUBLE                                  NOT NULL,
-    steals                      DOUBLE                                  NOT NULL,
-    blocks                      DOUBLE                                  NOT NULL,
-    turnovers                   DOUBLE                                  NOT NULL,
-    personal_fouls              DOUBLE                                  NOT NULL,
-    field_goals_made            DOUBLE                                  NOT NULL,
-    field_goals_attempted       DOUBLE                                  NOT NULL,
-    field_goal_percentage       DOUBLE                                  NOT NULL,
-    three_pointers_made         DOUBLE                                  NOT NULL,
-    three_pointers_attempted    DOUBLE                                  NOT NULL,
-    three_pointer_percentage    DOUBLE                                  NOT NULL,
-    free_throws_made            DOUBLE                                  NOT NULL,
-    free_throws_attempted       DOUBLE                                  NOT NULL,
-    free_throw_percentage       DOUBLE                                  NOT NULL
+    points                      DOUBLE PRECISION                                  NOT NULL,
+    assists                     DOUBLE PRECISION                                  NOT NULL,
+    rebounds                    DOUBLE PRECISION                                  NOT NULL,
+    defensive_rebounds          DOUBLE PRECISION                                  NOT NULL,
+    offensive_rebounds          DOUBLE PRECISION                                  NOT NULL,
+    steals                      DOUBLE PRECISION                                  NOT NULL,
+    blocks                      DOUBLE PRECISION                                  NOT NULL,
+    turnovers                   DOUBLE PRECISION                                  NOT NULL,
+    personal_fouls              DOUBLE PRECISION                                  NOT NULL,
+    field_goals_made            DOUBLE PRECISION                                  NOT NULL,
+    field_goals_attempted       DOUBLE PRECISION                                  NOT NULL,
+    field_goal_percentage       DOUBLE PRECISION                                  NOT NULL,
+    three_pointers_made         DOUBLE PRECISION                                  NOT NULL,
+    three_pointers_attempted    DOUBLE PRECISION                                  NOT NULL,
+    three_pointer_percentage    DOUBLE PRECISION                                  NOT NULL,
+    free_throws_made            DOUBLE PRECISION                                  NOT NULL,
+    free_throws_attempted       DOUBLE PRECISION                                  NOT NULL,
+    free_throw_percentage       DOUBLE PRECISION                                  NOT NULL
 );
