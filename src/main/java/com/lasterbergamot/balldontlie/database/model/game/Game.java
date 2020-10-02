@@ -21,6 +21,7 @@ public class Game {
     private Integer id;
 
     @NonNull
+    @Column(name = "date_of_match")
     private LocalDate date;
 
     @NonNull
@@ -41,6 +42,7 @@ public class Game {
     private String status;
 
     @NonNull
+    @Column(name = "time_till_start")
     private String time;
 
     @NonNull

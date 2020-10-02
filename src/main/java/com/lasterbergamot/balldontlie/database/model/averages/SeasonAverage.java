@@ -18,6 +18,7 @@ import java.util.Objects;
 public class SeasonAverage {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @NonNull

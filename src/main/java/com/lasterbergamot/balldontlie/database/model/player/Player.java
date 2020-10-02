@@ -31,6 +31,7 @@ public class Player {
     private String lastName;
 
     @NonNull
+    @Column(name = "player_position")
     private String position;
 
     @NonNull

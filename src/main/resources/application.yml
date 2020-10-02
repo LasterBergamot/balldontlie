@@ -3,6 +3,9 @@ server:
 
 spring:
   datasource:
+    url: jdbc:postgresql://localhost:5432/balldontlie
+    username: postgres
+    password: admin
     initialization-mode: always
     schema: classpath:/schema.sql
   jpa:
