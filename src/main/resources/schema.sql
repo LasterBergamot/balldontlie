@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS teams (
+CREATE TABLE IF NOT EXISTS team (
     id              INTEGER PRIMARY KEY,
     abbreviation    TEXT    NOT NULL,
     city            TEXT    NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS teams (
     name            TEXT    NOT NULL,
 );
 
-CREATE TABLE IF NOT EXISTS players (
+CREATE TABLE IF NOT EXISTS player (
     id              INTEGER PRIMARY KEY,
     first_name      TEXT    NOT NULL,
     last_name       TEXT    NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS players (
     team_id         INTEGER NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS games (
+CREATE TABLE IF NOT EXISTS game (
     id                  INTEGER PRIMARY KEY,
     date_of_match       DATE    NOT NULL,
     home_team_score     INTEGER NOT NULL,
@@ -31,4 +31,56 @@ CREATE TABLE IF NOT EXISTS games (
     postseason          BOOLEAN NOT NULL,
     home_team_id        INTEGER NOT NULL,
     visitor_team_id     INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS stats (
+    id                          INTEGER NOT NULL,
+    player_id                   INTEGER NOT NULL,
+    team_id                     INTEGER NOT NULL,
+    game_id                     INTEGER NOT NULL,
+    minutes                     TEXT    NOT NULL,
+    points                      INTEGER NOT NULL,
+    assists                     INTEGER NOT NULL,
+    rebounds                    INTEGER NOT NULL,
+    defensive_rebounds          INTEGER NOT NULL,
+    offensive_rebounds          INTEGER NOT NULL,
+    blocks                      INTEGER NOT NULL,
+    steals                      INTEGER NOT NULL,
+    turnovers                   INTEGER NOT NULL,
+    personal_fouls              INTEGER NOT NULL,
+    field_goals_attempted       INTEGER NOT NULL,
+    field_goals_made            INTEGER NOT NULL,
+    field_goal_percentage       DOUBLE  NOT NULL,
+    three_pointers_attempted    INTEGER NOT NULL,
+    three_pointers_made         INTEGER NOT NULL,
+    three_pointer_percentage    DOUBLE  NOT NULL,
+    free_throws_attempted       INTEGER NOT NULL,
+    free_throws_made            INTEGER NOT NULL,
+    free_throw_percentage       DOUBLE  NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS season_average (
+    id                          INTEGER GENERATED ALWAYS AS IDENTITY    PRIMARY KEY,
+    player_id                   INTEGER                                 NOT NULL,
+    games_played                INTEGER                                 NOT NULL,
+    season                      INTEGER                                 NOT NULL,
+    minutes                     TEXT                                    NOT NULL,
+    points                      DOUBLE                                  NOT NULL,
+    assists                     DOUBLE                                  NOT NULL,
+    rebounds                    DOUBLE                                  NOT NULL,
+    defensive_rebounds          DOUBLE                                  NOT NULL,
+    offensive_rebounds          DOUBLE                                  NOT NULL,
+    steals                      DOUBLE                                  NOT NULL,
+    blocks                      DOUBLE                                  NOT NULL,
+    turnovers                   DOUBLE                                  NOT NULL,
+    personal_fouls              DOUBLE                                  NOT NULL,
+    field_goals_made            DOUBLE                                  NOT NULL,
+    field_goals_attempted       DOUBLE                                  NOT NULL,
+    field_goal_percentage       DOUBLE                                  NOT NULL,
+    three_pointers_made         DOUBLE                                  NOT NULL,
+    three_pointers_attempted    DOUBLE                                  NOT NULL,
+    three_pointer_percentage    DOUBLE                                  NOT NULL,
+    free_throws_made            DOUBLE                                  NOT NULL,
+    free_throws_attempted       DOUBLE                                  NOT NULL,
+    free_throw_percentage       DOUBLE                                  NOT NULL
 );

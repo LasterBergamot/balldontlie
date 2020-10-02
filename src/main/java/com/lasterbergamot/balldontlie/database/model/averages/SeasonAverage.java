@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "season_averages")
+@Table(name = "season_average")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

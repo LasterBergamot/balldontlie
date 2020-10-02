@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-@Table(name = "games")
+@Table(name = "game")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
