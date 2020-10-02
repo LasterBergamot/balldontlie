@@ -31,8 +31,7 @@ public class PlayerServiceImpl implements PlayerService {
     public void getAllPlayersFromBalldontlieAPI() {
         log.info("Getting all players!");
         PlayerDTOWrapper playerDTOWrapper = restTemplate
-                .getForObject(String.format("https://www.balldontlie.io/api/v1/players?per_page=100&page=%d", 1),
-                        PlayerDTOWrapper.class);
+                .getForObject(String.format("https://www.balldontlie.io/api/v1/players?per_page=100&page=%d", 1), PlayerDTOWrapper.class);
 
         Optional.ofNullable(playerDTOWrapper)
                 .ifPresentOrElse(this::handlePossibleNewPlayers, () -> log.error("The PlayerDTOWrapper object got from the API was null!"));

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -26,22 +27,23 @@ public class TeamServiceImpl implements TeamService {
         log.info("Getting all teams!");
         TeamDTOWrapper teamDTOWrapper = restTemplate.getForObject("https://www.balldontlie.io/api/v1/teams/", TeamDTOWrapper.class);
 
-        if (teamDTOWrapper != null) {
-            List<Team> currentlyStoredTeams = teamRepository.findAll();
+        Optional.ofNullable(teamDTOWrapper)
+                .ifPresentOrElse(this::handlePossibleNewTeams, () -> log.error("The TeamDTOWrapper object got from the API was null!"));
+    }
 
-            if (currentlyStoredTeams.size() < teamDTOWrapper.getMeta().getTotalCount()) {
-                log.info("New teams available!");
+    private void handlePossibleNewTeams(TeamDTOWrapper teamDTOWrapper) {
+        List<Team> currentlyStoredTeams = teamRepository.findAll();
 
-                List<Team> teamsFromAPI = teamTransformer.transformTeamDTOListToTeamList(teamDTOWrapper.getTeamDTOs());
-                teamsFromAPI.removeAll(currentlyStoredTeams);
+        if (currentlyStoredTeams.size() < teamDTOWrapper.getMeta().getTotalCount()) {
+            log.info("New teams available!");
 
-                log.info("New teams: " + teamsFromAPI);
-                teamRepository.saveAll(teamsFromAPI);
-            } else {
-                log.info("No new teams available!");
-            }
+            List<Team> teamsFromAPI = teamTransformer.transformTeamDTOListToTeamList(teamDTOWrapper.getTeamDTOs());
+            teamsFromAPI.removeAll(currentlyStoredTeams);
+
+            log.info("New teams: " + teamsFromAPI);
+            teamRepository.saveAll(teamsFromAPI);
         } else {
-            log.error("The TeamDTOWrapper object got from the API was null!");
+            log.info("No new teams available!");
         }
     }
 }
