@@ -25,7 +25,7 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public void getAllTeamsFromBalldontlieAPI() {
         log.info("Getting all teams!");
-        TeamDTOWrapper teamDTOWrapper = restTemplate.getForObject("https://www.balldontlie.io/api/v1/teams/", TeamDTOWrapper.class);
+        TeamDTOWrapper teamDTOWrapper = restTemplate.getForObject("https://www.balldontlie.io/api/v1/teams?per_page=100", TeamDTOWrapper.class);
 
         Optional.ofNullable(teamDTOWrapper)
                 .ifPresentOrElse(this::handlePossibleNewTeams, () -> log.error("The TeamDTOWrapper object got from the API was null!"));

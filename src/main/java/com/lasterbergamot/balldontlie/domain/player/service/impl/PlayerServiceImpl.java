@@ -118,6 +118,8 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public Player getPlayer(Integer id) {
         log.info("Getting player with id: {}", id);
-        return playerRepository.findById(id).orElse(null);
+        return playerRepository
+                .findById(id)
+                .orElse(null);
     }
 }
