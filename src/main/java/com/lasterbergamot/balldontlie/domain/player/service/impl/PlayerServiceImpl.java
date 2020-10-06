@@ -50,7 +50,7 @@ public class PlayerServiceImpl implements PlayerService {
             List<Player> playersFromAPI = getPlayersFromAPI(playerDTOWrapper, allCompletableFuture);
 
             Set<Player> playersToSave = new HashSet<>(playersFromAPI);
-            playersToSave.addAll(currentlySavedPlayers);
+            playersToSave.removeAll(currentlySavedPlayers);
 
             playerRepository.saveAll(List.copyOf(playersToSave));
             log.info("Saved {} new players!", playersToSave.size());

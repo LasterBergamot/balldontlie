@@ -2,6 +2,7 @@ package com.lasterbergamot.balldontlie;
 
 import com.lasterbergamot.balldontlie.domain.game.service.GameService;
 import com.lasterbergamot.balldontlie.domain.player.service.PlayerService;
+import com.lasterbergamot.balldontlie.domain.stats.service.StatsService;
 import com.lasterbergamot.balldontlie.domain.team.service.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -15,6 +16,7 @@ public class BalldontlieApplication implements CommandLineRunner {
 	private final TeamService teamService;
 	private final PlayerService playerService;
 	private final GameService gameService;
+	private final StatsService statsService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BalldontlieApplication.class, args);
@@ -25,5 +27,6 @@ public class BalldontlieApplication implements CommandLineRunner {
 		teamService.getAllTeamsFromBalldontlieAPI();
 		playerService.getAllPlayersFromBalldontlieAPI();
 		gameService.getAllGamesFromBalldontlieAPI();
+		statsService.getAllStatsFromBalldontlieAPI();
 	}
 }

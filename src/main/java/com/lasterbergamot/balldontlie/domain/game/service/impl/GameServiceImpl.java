@@ -39,6 +39,11 @@ public class GameServiceImpl implements GameService {
                 .ifPresentOrElse(this::handlePossibleNewGames, () -> log.error("The GameDTOWrapper got from the API was null!"));
     }
 
+    @Override
+    public Optional<Game> getGame(Integer id) {
+        return gameRepository.findById(id);
+    }
+
     private void handlePossibleNewGames(GameDTOWrapper gameDTOWrapper) {
         List<Game> currentlySavedGames = gameRepository.findAll();
         Meta meta = gameDTOWrapper.getMeta();
@@ -66,15 +71,13 @@ public class GameServiceImpl implements GameService {
         // - all of the teams were get in 1 request
         // - all of the players were get in 33 requests
         // -> 26 requests remain for this minute, because of the 60 requests/min limit
-        int maxNumberOfRequests = Math.min(totalPages, 26);
+        int maxNumberOfRequests = Math.min(totalPages, 10);
 
         int min = 2;
         int max = totalPages - maxNumberOfRequests;
         int minLimit = ThreadLocalRandom.current().nextInt(max - min) + min;
         int maxLimit = minLimit + maxNumberOfRequests;
 
-        log.info("minLimit: {}",  minLimit);
-        log.info("maxLimit: {}", maxLimit);
         for (int currentPage = minLimit; currentPage <= maxLimit; currentPage++) {
             int finalCurrentPage = currentPage;
             CompletableFuture<GameDTOWrapper> completableFuture = CompletableFuture.supplyAsync(

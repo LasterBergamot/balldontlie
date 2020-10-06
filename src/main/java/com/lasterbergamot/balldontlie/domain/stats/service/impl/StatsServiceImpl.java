@@ -1,7 +1,9 @@
 package com.lasterbergamot.balldontlie.domain.stats.service.impl;
 
+import com.lasterbergamot.balldontlie.database.model.game.Game;
 import com.lasterbergamot.balldontlie.database.model.stats.Stats;
 import com.lasterbergamot.balldontlie.database.repository.stats.StatsRepository;
+import com.lasterbergamot.balldontlie.domain.game.service.GameService;
 import com.lasterbergamot.balldontlie.domain.model.meta.Meta;
 import com.lasterbergamot.balldontlie.domain.stats.model.StatsDTOWrapper;
 import com.lasterbergamot.balldontlie.domain.stats.service.StatsService;
@@ -13,11 +15,13 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +30,7 @@ import java.util.stream.Collectors;
 public class StatsServiceImpl implements StatsService {
 
     private final StatsRepository statsRepository;
+    private final GameService gameService;
     private final StatsTransformer statsTransformer;
     private final RestTemplate restTemplate;
 
@@ -50,7 +55,9 @@ public class StatsServiceImpl implements StatsService {
             List<Stats> statsFromAPI = getPlayersFromAPI(statsDTOWrapper, allCompletableFuture);
 
             Set<Stats> statsToSave = new HashSet<>(statsFromAPI);
-            statsToSave.addAll(currentlySavedStats);
+            statsToSave.removeAll(currentlySavedStats);
+
+            handlePossibleNonStoredGames(statsToSave);
 
             statsRepository.saveAll(List.copyOf(statsToSave));
             log.info("Saved {} new stats!", statsToSave.size());
@@ -59,10 +66,28 @@ public class StatsServiceImpl implements StatsService {
         }
     }
 
+    private void handlePossibleNonStoredGames(Set<Stats> statsToSave) {
+        for (Iterator<Stats> statsIterator = statsToSave.iterator(); statsIterator.hasNext();) {
+            Stats stats = statsIterator.next();
+            Game game = stats.getGame();
+            Optional<Game> gameFromRepository = gameService.getGame(game.getId());
+
+            if (gameFromRepository.isEmpty()) {
+                statsIterator.remove();
+            }
+        }
+    }
+
     private List<CompletableFuture<StatsDTOWrapper>> createCompletableFuturesFromTheAPICalls(Integer totalPages) {
         List<CompletableFuture<StatsDTOWrapper>> completableFutureList = new ArrayList<>();
+        int maxNumberOfRequests = Math.min(totalPages, 8);
 
-        for (int currentPage = 2; currentPage <= totalPages; currentPage++) {
+        int min = 2;
+        int max = totalPages - maxNumberOfRequests;
+        int minLimit = ThreadLocalRandom.current().nextInt(max - min) + min;
+        int maxLimit = minLimit + maxNumberOfRequests;
+
+        for (int currentPage = minLimit; currentPage <= maxLimit; currentPage++) {
             int finalCurrentPage = currentPage;
             CompletableFuture<StatsDTOWrapper> completableFuture = CompletableFuture.supplyAsync(
                     () -> restTemplate
