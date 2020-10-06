@@ -49,8 +49,8 @@ public class PlayerServiceImpl implements PlayerService {
             CompletableFuture<List<PlayerDTOWrapper>> allCompletableFuture = collectReturnValuesFromAllThreads(completableFutureList);
             List<Player> playersFromAPI = getPlayersFromAPI(playerDTOWrapper, allCompletableFuture);
 
-            Set<Player> playersToSave = new HashSet<>(currentlySavedPlayers);
-            playersToSave.addAll(playersFromAPI);
+            Set<Player> playersToSave = new HashSet<>(playersFromAPI);
+            playersToSave.addAll(currentlySavedPlayers);
 
             playerRepository.saveAll(List.copyOf(playersToSave));
             log.info("Saved {} new players!", playersToSave.size());
