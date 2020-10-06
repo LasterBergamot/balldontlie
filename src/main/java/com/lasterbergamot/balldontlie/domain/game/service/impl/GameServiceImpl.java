@@ -50,8 +50,8 @@ public class GameServiceImpl implements GameService {
             CompletableFuture<List<GameDTOWrapper>> allCompletableFuture = collectReturnValuesFromAllThreads(completableFutureList);
             List<Game> gamesFromAPI = getGamesFromAPI(gameDTOWrapper, allCompletableFuture);
 
-            Set<Game> gamesToSave = new HashSet<>(currentlySavedGames);
-            gamesToSave.addAll(gamesFromAPI);
+            Set<Game> gamesToSave = new HashSet<>(gamesFromAPI);
+            gamesToSave.removeAll(currentlySavedGames);
 
             gameRepository.saveAll(List.copyOf(gamesToSave));
             log.info("Saved {} new games!", gamesToSave.size());
@@ -79,7 +79,7 @@ public class GameServiceImpl implements GameService {
             int finalCurrentPage = currentPage;
             CompletableFuture<GameDTOWrapper> completableFuture = CompletableFuture.supplyAsync(
                     () -> restTemplate
-                            .getForObject(String.format("https://www.balldontlie.io/api/v1/games?per_page=100?page=%d", finalCurrentPage), GameDTOWrapper.class)
+                            .getForObject(String.format("https://www.balldontlie.io/api/v1/games?per_page=100&page=%d", finalCurrentPage), GameDTOWrapper.class)
             );
 
             completableFutureList.add(completableFuture);
