@@ -55,7 +55,7 @@ public class PlayerServiceImpl implements PlayerService {
             playerRepository.saveAll(List.copyOf(playersToSave));
             log.info("Saved {} new players!", playersToSave.size());
         } else {
-            log.info("No new players are available!");
+            log.info("No new players available!");
         }
     }
 
