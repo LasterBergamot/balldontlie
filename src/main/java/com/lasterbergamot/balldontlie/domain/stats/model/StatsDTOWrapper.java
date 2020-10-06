@@ -6,13 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 @NoArgsConstructor
 @Getter
 @ToString
 public class StatsDTOWrapper {
 
     @JsonProperty("data")
-    private StatsDTO statsDTO;
+    private List<StatsDTO> statsDTOs;
 
     @JsonProperty("meta")
     private Meta meta;

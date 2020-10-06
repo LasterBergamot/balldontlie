@@ -33,7 +33,7 @@ public class GameServiceImpl implements GameService {
     @Override
     public void getAllGamesFromBalldontlieAPI() {
         GameDTOWrapper gameDTOWrapper = restTemplate
-                .getForObject(String.format("https://www.balldontlie.io/api/v1/games?per_page=100?page=%d", 1), GameDTOWrapper.class);
+                .getForObject(String.format("https://www.balldontlie.io/api/v1/games?per_page=100&page=%d", 1), GameDTOWrapper.class);
 
         Optional.ofNullable(gameDTOWrapper)
                 .ifPresentOrElse(this::handlePossibleNewGames, () -> log.error("The GameDTOWrapper got from the API was null!"));
