@@ -1,0 +1,28 @@
+type Team {
+    id: ID!,
+    abbreviation: String!,
+    city: String!,
+    conference: String!,
+    division: String!,
+    fullName: String!,
+    name: String!
+}
+
+type Player {
+    id: ID!,
+    firstName: String!,
+    lastName: String!,
+    position: String!,
+    heightFeet: Int!,
+    heightInches: Int!,
+    weightPounds: Int!
+    team: Team!
+}
+
+type Query {
+    teams(count: Int): [Team]
+    team(id: ID): Team
+
+    players(count: Int): [Player]
+    player(id: ID): Player
+}
