@@ -123,10 +123,17 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player getPlayer(Integer id) {
+    public List<Player> getPlayers(int count) {
+        List<Player> players = playerRepository.findAll();
+
+        return count == -1
+                ? players
+                : players.stream().limit(count).collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public Optional<Player> getPlayer(final int id) {
         log.info("Getting player with id: {}", id);
-        return playerRepository
-                .findById(id)
-                .orElse(null);
+        return playerRepository.findById(id);
     }
 }

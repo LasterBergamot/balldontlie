@@ -40,7 +40,16 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Optional<Game> getGame(Integer id) {
+    public List<Game> getGames(final int count) {
+        List<Game> games = gameRepository.findAll();
+
+        return count == -1
+                ? games
+                : games.stream().limit(count).collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public Optional<Game> getGame(final int id) {
         return gameRepository.findById(id);
     }
 
