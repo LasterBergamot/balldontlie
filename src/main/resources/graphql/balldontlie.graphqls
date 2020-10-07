@@ -5,7 +5,8 @@ type Team {
     conference: String!,
     division: String!,
     fullName: String!,
-    name: String!
+    name: String!,
+    players: [Player]!
 }
 
 type Player {
