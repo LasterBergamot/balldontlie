@@ -35,15 +35,19 @@ public class TeamServiceImpl implements TeamService {
     private void handlePossibleNewTeams(TeamDTOWrapper teamDTOWrapper) {
         List<Team> currentlyStoredTeams = teamRepository.findAll();
 
+        log.info("Checking for possible new teams!");
         if (currentlyStoredTeams.size() < teamDTOWrapper.getMeta().getTotalCount()) {
-            log.info("New teams available!");
-
             List<Team> teamsFromAPI = teamTransformer.transformTeamDTOListToTeamList(teamDTOWrapper.getTeamDTOs());
             Set<Team> teamsToSave = new HashSet<>(currentlyStoredTeams);
             teamsToSave.addAll(teamsFromAPI);
 
-            teamRepository.saveAll(List.copyOf(teamsToSave));
-            log.info("Saved {} new teams!", teamsToSave.size());
+            if (teamsToSave.size() > 0) {
+                log.info("New teams available!");
+                teamRepository.saveAll(List.copyOf(teamsToSave));
+                log.info("Saved {} new teams!", teamsToSave.size());
+            } else {
+                log.info("No new teams available!");
+            }
         } else {
             log.info("No new teams available!");
         }

@@ -48,9 +48,8 @@ public class GameServiceImpl implements GameService {
         List<Game> currentlySavedGames = gameRepository.findAll();
         Meta meta = gameDTOWrapper.getMeta();
 
+        log.info("Checking for possible new games!");
         if (currentlySavedGames.size() < meta.getTotalCount()) {
-            log.info("New games are available!");
-
             List<CompletableFuture<GameDTOWrapper>> completableFutureList = createCompletableFuturesFromTheAPICalls(meta.getTotalPages());
             CompletableFuture<List<GameDTOWrapper>> allCompletableFuture = collectReturnValuesFromAllThreads(completableFutureList);
             List<Game> gamesFromAPI = getGamesFromAPI(gameDTOWrapper, allCompletableFuture);
@@ -58,8 +57,13 @@ public class GameServiceImpl implements GameService {
             Set<Game> gamesToSave = new HashSet<>(gamesFromAPI);
             gamesToSave.removeAll(currentlySavedGames);
 
-            gameRepository.saveAll(List.copyOf(gamesToSave));
-            log.info("Saved {} new games!", gamesToSave.size());
+            if (gamesToSave.size() > 0) {
+                log.info("New games are available!");
+                gameRepository.saveAll(List.copyOf(gamesToSave));
+                log.info("Saved {} new games!", gamesToSave.size());
+            } else {
+                log.info("No new games are available!");
+            }
         } else {
             log.info("No new games are available!");
         }

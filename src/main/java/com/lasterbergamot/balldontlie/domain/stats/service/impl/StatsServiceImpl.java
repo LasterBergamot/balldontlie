@@ -47,9 +47,8 @@ public class StatsServiceImpl implements StatsService {
         List<Stats> currentlySavedStats = statsRepository.findAll();
         Meta meta = statsDTOWrapper.getMeta();
 
+        log.info("Checking for possible new stats!");
         if (currentlySavedStats.size() < meta.getTotalCount()) {
-            log.info("New stats are available!");
-
             List<CompletableFuture<StatsDTOWrapper>> completableFutureList = createCompletableFuturesFromTheAPICalls(meta.getTotalPages());
             CompletableFuture<List<StatsDTOWrapper>> allCompletableFuture = collectReturnValuesFromAllThreads(completableFutureList);
             List<Stats> statsFromAPI = getPlayersFromAPI(statsDTOWrapper, allCompletableFuture);
@@ -59,8 +58,13 @@ public class StatsServiceImpl implements StatsService {
 
             handlePossibleNonStoredGames(statsToSave);
 
-            statsRepository.saveAll(List.copyOf(statsToSave));
-            log.info("Saved {} new stats!", statsToSave.size());
+            if (statsToSave.size() > 0) {
+                log.info("New stats are available!");
+                statsRepository.saveAll(List.copyOf(statsToSave));
+                log.info("Saved {} new stats!", statsToSave.size());
+            } else {
+                log.info("No new stats available!");
+            }
         } else {
             log.info("No new stats available!");
         }

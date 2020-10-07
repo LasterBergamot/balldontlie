@@ -42,9 +42,8 @@ public class PlayerServiceImpl implements PlayerService {
         List<Player> currentlySavedPlayers = playerRepository.findAll();
         Meta meta = playerDTOWrapper.getMeta();
 
+        log.info("Checking for possible new players!");
         if (currentlySavedPlayers.size() < meta.getTotalCount()) {
-            log.info("New players are available!");
-
             List<CompletableFuture<PlayerDTOWrapper>> completableFutureList = createCompletableFuturesFromTheAPICalls(meta.getTotalPages());
             CompletableFuture<List<PlayerDTOWrapper>> allCompletableFuture = collectReturnValuesFromAllThreads(completableFutureList);
             List<Player> playersFromAPI = getPlayersFromAPI(playerDTOWrapper, allCompletableFuture);
@@ -52,8 +51,13 @@ public class PlayerServiceImpl implements PlayerService {
             Set<Player> playersToSave = new HashSet<>(playersFromAPI);
             playersToSave.removeAll(currentlySavedPlayers);
 
-            playerRepository.saveAll(List.copyOf(playersToSave));
-            log.info("Saved {} new players!", playersToSave.size());
+            if (playersToSave.size() > 0) {
+                log.info("New players are available!");
+                playerRepository.saveAll(List.copyOf(playersToSave));
+                log.info("Saved {} new players!", playersToSave.size());
+            } else {
+                log.info("No new players available!");
+            }
         } else {
             log.info("No new players available!");
         }
