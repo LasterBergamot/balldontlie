@@ -43,6 +43,20 @@ public class StatsServiceImpl implements StatsService {
                 .ifPresentOrElse(this::handlePossibleNewStats, () -> log.error("The StatsDTOWrapper object got from the API was null!"));
     }
 
+    @Override
+    public List<Stats> getAllStats(final int count) {
+        List<Stats> statsList = statsRepository.findAll();
+
+        return count == -1
+                ? statsList
+                : statsList.stream().limit(count).collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public Optional<Stats> getStats(final int id) {
+        return statsRepository.findById(id);
+    }
+
     private void handlePossibleNewStats(StatsDTOWrapper statsDTOWrapper) {
         List<Stats> currentlySavedStats = statsRepository.findAll();
         Meta meta = statsDTOWrapper.getMeta();

@@ -33,6 +33,32 @@ type Game {
     visitorTeam: Team!
 }
 
+type Stats {
+    id: ID!,
+    player: Player!,
+    team: Team!,
+    game: Game!,
+    minutes: String!,
+    points: Int!,
+    assists: Int!,
+    rebounds: Int!,
+    defensiveRebounds: Int!,
+    offensiveRebounds: Int!,
+    blocks: Int!,
+    steals: Int!,
+    turnovers: Int!,
+    personalFouls: Int!,
+    fieldGoalsAttempted: Int!,
+    fieldGoalsMade: Int!,
+    fieldGoalPercentage: Float!,
+    threePointersAttempted: Int!,
+    threePointersMade: Int!,
+    threePointerPercentage: Float!,
+    freeThrowsAttempted: Int!,
+    freeThrowsMade: Int!,
+    freeThrowPercentage: Float!
+}
+
 type Query {
     # Give -1 to get all teams.
     teams(count: Int): [Team]
@@ -45,4 +71,8 @@ type Query {
     # Give -1 to get all games.
     games(count: Int): [Game]
     game(id: ID): Game
+
+    # Give -1 to get all stats.
+    allStats(count: Int): [Stats]
+    stats(id: ID): Stats
 }
