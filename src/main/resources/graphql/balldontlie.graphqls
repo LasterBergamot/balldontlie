@@ -19,6 +19,20 @@ type Player {
     team: Team!
 }
 
+type Game {
+    id: ID!,
+    date: String!,
+    homeTeamScore: Int!,
+    visitorTeamScore: Int!,
+    season: Int!,
+    period: Int!,
+    status: String!,
+    time: String!,
+    postseason: Boolean!,
+    homeTeam: Team!,
+    visitorTeam: Team!
+}
+
 type Query {
     # Give -1 to get all teams.
     teams(count: Int): [Team]
@@ -27,4 +41,8 @@ type Query {
     # Give -1 to get all players.
     players(count: Int): [Player]
     player(id: ID): Player
+
+    # Give -1 to get all games.
+    games(count: Int): [Game]
+    game(id: ID): Game
 }
