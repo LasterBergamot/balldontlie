@@ -20,6 +20,7 @@ type Player {
 }
 
 type Query {
+    # Give -1 to get all teams.
     teams(count: Int): [Team]
     team(id: ID): Team
 

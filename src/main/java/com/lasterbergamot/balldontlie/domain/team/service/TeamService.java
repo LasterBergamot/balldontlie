@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface TeamService {
     void getAllTeamsFromBalldontlieAPI();
 
+    List<Team> getAllTeams();
     List<Team> getTeams(final int count);
     Optional<Team> getTeam(final int id);
 }

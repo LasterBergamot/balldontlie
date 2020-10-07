@@ -34,6 +34,11 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    public List<Team> getAllTeams() {
+        return teamRepository.findAll();
+    }
+
+    @Override
     public List<Team> getTeams(final int count) {
         return teamRepository.findAll().stream().limit(count).collect(Collectors.toUnmodifiableList());
     }
