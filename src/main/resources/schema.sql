@@ -58,29 +58,3 @@ CREATE TABLE IF NOT EXISTS stats (
     free_throws_made            INTEGER,
     free_throw_percentage       DOUBLE PRECISION
 );
-
-CREATE TABLE IF NOT EXISTS season_average (
-    id                          INTEGER GENERATED ALWAYS AS IDENTITY    PRIMARY KEY,
-    player_id                   INTEGER                                 NOT NULL,
-    games_played                INTEGER                                 NOT NULL,
-    season                      INTEGER                                 NOT NULL,
-    minutes                     TEXT                                    NOT NULL,
-    points                      DOUBLE PRECISION                                  NOT NULL,
-    assists                     DOUBLE PRECISION                                  NOT NULL,
-    rebounds                    DOUBLE PRECISION                                  NOT NULL,
-    defensive_rebounds          DOUBLE PRECISION                                  NOT NULL,
-    offensive_rebounds          DOUBLE PRECISION                                  NOT NULL,
-    steals                      DOUBLE PRECISION                                  NOT NULL,
-    blocks                      DOUBLE PRECISION                                  NOT NULL,
-    turnovers                   DOUBLE PRECISION                                  NOT NULL,
-    personal_fouls              DOUBLE PRECISION                                  NOT NULL,
-    field_goals_made            DOUBLE PRECISION                                  NOT NULL,
-    field_goals_attempted       DOUBLE PRECISION                                  NOT NULL,
-    field_goal_percentage       DOUBLE PRECISION                                  NOT NULL,
-    three_pointers_made         DOUBLE PRECISION                                  NOT NULL,
-    three_pointers_attempted    DOUBLE PRECISION                                  NOT NULL,
-    three_pointer_percentage    DOUBLE PRECISION                                  NOT NULL,
-    free_throws_made            DOUBLE PRECISION                                  NOT NULL,
-    free_throws_attempted       DOUBLE PRECISION                                  NOT NULL,
-    free_throw_percentage       DOUBLE PRECISION                                  NOT NULL
-);

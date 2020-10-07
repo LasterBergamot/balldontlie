@@ -1,6 +1,5 @@
 package com.lasterbergamot.balldontlie.database.model.player;
 
-import com.lasterbergamot.balldontlie.database.model.averages.SeasonAverage;
 import com.lasterbergamot.balldontlie.database.model.team.Team;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,13 +12,10 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -61,11 +57,6 @@ public class Player {
     @OneToOne
     @JoinColumn(name = "team_id")
     private Team team;
-
-    //TODO: change to FetchType.LAZY => handle it
-    @NonNull
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "player")
-    private List<SeasonAverage> seasonAverages;
 
     @Override
     public boolean equals(Object o) {

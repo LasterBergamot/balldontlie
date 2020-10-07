@@ -6,7 +6,6 @@ import com.lasterbergamot.balldontlie.domain.team.transform.TeamTransformer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +32,6 @@ public class PlayerTransformer {
                 .position(playerDTO.getPosition())
                 .weightPounds(playerDTO.getWeightPounds())
                 .team(teamTransformer.transformTeamDTOToTeam(playerDTO.getTeam()))
-                .seasonAverages(new ArrayList<>())
                 .build();
     }
 }
