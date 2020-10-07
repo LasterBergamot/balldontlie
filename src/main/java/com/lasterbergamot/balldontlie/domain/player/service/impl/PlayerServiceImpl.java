@@ -124,7 +124,11 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public List<Player> getPlayers(int count) {
-        return playerRepository.findAll().stream().limit(count).collect(Collectors.toUnmodifiableList());
+        List<Player> players = playerRepository.findAll();
+
+        return count == -1
+                ? players
+                : players.stream().limit(count).collect(Collectors.toUnmodifiableList());
     }
 
     @Override
