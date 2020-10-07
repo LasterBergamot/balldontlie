@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -30,6 +31,16 @@ public class TeamServiceImpl implements TeamService {
 
         Optional.ofNullable(teamDTOWrapper)
                 .ifPresentOrElse(this::handlePossibleNewTeams, () -> log.error("The TeamDTOWrapper object got from the API was null!"));
+    }
+
+    @Override
+    public List<Team> getTeams(final int count) {
+        return teamRepository.findAll().stream().limit(count).collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public Optional<Team> getTeam(final int id) {
+        return teamRepository.findById(id);
     }
 
     private void handlePossibleNewTeams(TeamDTOWrapper teamDTOWrapper) {

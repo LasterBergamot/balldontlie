@@ -1,0 +1,14 @@
+type Team {
+    id: ID!,
+    abbreviation: String!,
+    city: String!,
+    conference: String!,
+    division: String!,
+    fullName: String!,
+    name: String!
+}
+
+type Query {
+    teams(count: Int): [Team]
+    team(id: ID): Team
+}
