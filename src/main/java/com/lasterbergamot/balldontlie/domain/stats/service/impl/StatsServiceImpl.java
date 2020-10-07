@@ -1,6 +1,7 @@
 package com.lasterbergamot.balldontlie.domain.stats.service.impl;
 
 import com.lasterbergamot.balldontlie.database.model.game.Game;
+import com.lasterbergamot.balldontlie.database.model.player.Player;
 import com.lasterbergamot.balldontlie.database.model.stats.Stats;
 import com.lasterbergamot.balldontlie.database.repository.stats.StatsRepository;
 import com.lasterbergamot.balldontlie.domain.game.service.GameService;
@@ -50,6 +51,11 @@ public class StatsServiceImpl implements StatsService {
         return count == -1
                 ? statsList
                 : statsList.stream().limit(count).collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public List<Stats> getAllStats(Player player) {
+        return statsRepository.findAllByPlayer(player);
     }
 
     @Override

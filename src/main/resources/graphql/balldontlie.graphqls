@@ -17,7 +17,9 @@ type Player {
     heightFeet: Int!,
     heightInches: Int!,
     weightPounds: Int!
-    team: Team!
+    team: Team!,
+    games: [Game]!,
+    stats: [Stats]!
 }
 
 type Game {
