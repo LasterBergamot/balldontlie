@@ -45,12 +45,12 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<Stats> getAllStats(final int count) {
-        List<Stats> statsList = statsRepository.findAll();
-
-        return count == -1
-                ? statsList
-                : statsList.stream().limit(count).collect(Collectors.toUnmodifiableList());
+    public List<Stats> getAllStats(final Optional<Integer> count) {
+        return statsRepository
+                .findAll()
+                .stream()
+                .limit(count.orElse(Integer.MAX_VALUE))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override

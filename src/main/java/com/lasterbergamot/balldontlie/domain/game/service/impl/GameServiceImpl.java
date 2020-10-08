@@ -67,12 +67,12 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<Game> getGames(final int count) {
-        List<Game> games = gameRepository.findAll();
-
-        return count == -1
-                ? games
-                : games.stream().limit(count).collect(Collectors.toUnmodifiableList());
+    public List<Game> getGames(final Optional<Integer> count) {
+        return gameRepository
+                .findAll()
+                .stream()
+                .limit(count.orElse(Integer.MAX_VALUE))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override

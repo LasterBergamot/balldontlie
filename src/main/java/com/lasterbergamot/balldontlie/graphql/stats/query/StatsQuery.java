@@ -15,7 +15,7 @@ public class StatsQuery implements GraphQLQueryResolver {
 
     private final StatsService statsService;
 
-    public List<Stats> allStats(final int count) {
+    public List<Stats> allStats(final Optional<Integer> count) {
         return statsService.getAllStats(count);
     }
 

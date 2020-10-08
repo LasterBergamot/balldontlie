@@ -15,7 +15,7 @@ public class PlayerQuery implements GraphQLQueryResolver {
 
     private final PlayerService playerService;
 
-    public List<Player> players(final int count) {
+    public List<Player> players(final Optional<Integer> count) {
         return playerService.getPlayers(count);
     }
 

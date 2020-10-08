@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface StatsService {
     void getAllStatsFromBalldontlieAPI();
 
-    List<Stats> getAllStats(final int count);
+    List<Stats> getAllStats(final Optional<Integer> count);
     List<Stats> getAllStats(Player player);
     Optional<Stats> getStats(final int id);
 }
