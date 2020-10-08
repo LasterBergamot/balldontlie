@@ -7,6 +7,7 @@ import com.lasterbergamot.balldontlie.database.repository.team.TeamRepository;
 import com.lasterbergamot.balldontlie.domain.team.model.TeamDTOWrapper;
 import com.lasterbergamot.balldontlie.domain.team.service.TeamService;
 import com.lasterbergamot.balldontlie.domain.team.transform.TeamTransformer;
+import com.lasterbergamot.balldontlie.graphql.team.exception.TeamQueryException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,10 @@ public class TeamServiceImpl implements TeamService {
         } else if (division == null) {
             teamPredicate = team -> team.getConference().equals(conference);
         } else {
+            if (!division.getConference().equals(conference)) {
+                throw new TeamQueryException("The given division is not part of the given conference!");
+            }
+
             teamPredicate = team -> team.getConference().equals(conference) && team.getDivision().equals(division);
         }
 
