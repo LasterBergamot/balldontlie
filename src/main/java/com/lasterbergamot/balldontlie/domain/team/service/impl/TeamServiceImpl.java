@@ -40,6 +40,14 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public List<Team> getTeams(final int count, final Conference conference, final Division division) {
         List<Team> teams = teamRepository.findAll();
+        Predicate<Team> teamPredicate = getTeamPredicateAccordingToConferenceAndDivision(conference, division);
+        
+        return teamPredicate == null
+                ? handleCount(count, teams)
+                : handleCount(count, handlePredicate(teams, teamPredicate));
+    }
+
+    private Predicate<Team> getTeamPredicateAccordingToConferenceAndDivision(final Conference conference, final Division division) throws TeamQueryException {
         Predicate<Team> teamPredicate;
 
         if (conference == null && division == null) {
@@ -56,9 +64,7 @@ public class TeamServiceImpl implements TeamService {
             teamPredicate = team -> team.getConference().equals(conference) && team.getDivision().equals(division);
         }
 
-        return teamPredicate == null
-                ? handleCount(count, teams)
-                : handleCount(count, handlePredicate(teams, teamPredicate));
+        return teamPredicate;
     }
 
     private List<Team> handleCount(final int count, final List<Team> teams) {
