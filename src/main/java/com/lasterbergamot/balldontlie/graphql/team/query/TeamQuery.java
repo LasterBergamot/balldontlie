@@ -1,6 +1,8 @@
 package com.lasterbergamot.balldontlie.graphql.team.query;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import com.lasterbergamot.balldontlie.database.model.team.Conference;
+import com.lasterbergamot.balldontlie.database.model.team.Division;
 import com.lasterbergamot.balldontlie.database.model.team.Team;
 import com.lasterbergamot.balldontlie.domain.team.service.TeamService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +17,7 @@ public class TeamQuery implements GraphQLQueryResolver {
 
     private final TeamService teamService;
 
-    public List<Team> teams(final int count, final String conference, final String division) {
+    public List<Team> teams(final int count, final Conference conference, final Division division) {
         return teamService.getTeams(count, conference, division);
     }
 

@@ -1,5 +1,7 @@
 package com.lasterbergamot.balldontlie.domain.team.service.impl;
 
+import com.lasterbergamot.balldontlie.database.model.team.Conference;
+import com.lasterbergamot.balldontlie.database.model.team.Division;
 import com.lasterbergamot.balldontlie.database.model.team.Team;
 import com.lasterbergamot.balldontlie.database.repository.team.TeamRepository;
 import com.lasterbergamot.balldontlie.domain.team.model.TeamDTOWrapper;
@@ -35,7 +37,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public List<Team> getTeams(final int count, final String conference, final String division) {
+    public List<Team> getTeams(final int count, final Conference conference, final Division division) {
         List<Team> teams = teamRepository.findAll();
         Predicate<Team> teamPredicate;
 

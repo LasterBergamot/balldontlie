@@ -12,6 +12,8 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Objects;
@@ -37,10 +39,12 @@ public class Team {
     private String city;
 
     @NonNull
-    private String conference;
+    @Enumerated(EnumType.STRING)
+    private Conference conference;
 
     @NonNull
-    private String division;
+    @Enumerated(EnumType.STRING)
+    private Division division;
 
     @NonNull
     @Column(name = "full_name")
