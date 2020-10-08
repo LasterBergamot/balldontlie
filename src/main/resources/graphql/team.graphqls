@@ -16,8 +16,7 @@ input TeamInput {
     conference: Conference!,
     division: Division!,
     fullName: String!,
-    name: String!,
-    players: [PlayerInput]!
+    name: String!
 }
 
 type Query {

@@ -19,9 +19,7 @@ input PlayerInput {
     heightFeet: Int!,
     heightInches: Int!,
     weightPounds: Int!
-    team: TeamInput!,
-    games: [GameInput]!,
-    stats: [StatsInput]!
+    team: TeamInput!
 }
 
 extend type Query {

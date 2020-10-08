@@ -40,7 +40,7 @@ type Mutation {
         visitorTeamScore: Int!,
         season: Int!,
         period: Int!,
-        status: Int!,
+        status: String!,
         time: String!,
         postseason: Boolean!,
         homeTeam: TeamInput!,

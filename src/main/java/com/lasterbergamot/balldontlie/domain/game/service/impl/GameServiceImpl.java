@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -78,6 +79,30 @@ public class GameServiceImpl implements GameService {
     @Override
     public Optional<Game> getGame(final int id) {
         return gameRepository.findById(id);
+    }
+
+    @Override
+    public Game createGame(Integer id, String date,
+                           Integer homeTeamScore, Integer visitorTeamScore,
+                           Integer season, Integer period,
+                           String status, String time,
+                           Boolean postseason, Team homeTeam,
+                           Team visitorTeam) {
+        Game game = Game.builder()
+                .id(id)
+                .date(LocalDate.parse(date))
+                .homeTeam(homeTeam)
+                .homeTeamScore(homeTeamScore)
+                .period(period)
+                .postseason(postseason)
+                .season(season)
+                .status(status)
+                .time(time)
+                .visitorTeam(visitorTeam)
+                .visitorTeamScore(visitorTeamScore)
+                .build();
+
+        return gameRepository.save(game);
     }
 
     private void handlePossibleNewGames(GameDTOWrapper gameDTOWrapper) {
