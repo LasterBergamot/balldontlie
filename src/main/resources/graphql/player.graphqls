@@ -11,6 +11,19 @@ type Player {
     stats: [Stats]!
 }
 
+input PlayerInput {
+    id: ID!,
+    firstName: String!,
+    lastName: String!,
+    position: String!,
+    heightFeet: Int!,
+    heightInches: Int!,
+    weightPounds: Int!
+    team: TeamInput!,
+    games: [GameInput]!,
+    stats: [StatsInput]!
+}
+
 extend type Query {
     # Give -1 to get all players.
     players(count: Int): [Player]
