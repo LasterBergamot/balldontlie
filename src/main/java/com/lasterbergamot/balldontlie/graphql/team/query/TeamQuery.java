@@ -17,7 +17,7 @@ public class TeamQuery implements GraphQLQueryResolver {
 
     private final TeamService teamService;
 
-    public List<Team> teams(final int count, final Conference conference, final Division division) {
+    public List<Team> teams(final Optional<Integer> count, final Conference conference, final Division division) {
         return teamService.getTeams(count, conference, division);
     }
 

@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface TeamService {
     void getAllTeamsFromBalldontlieAPI();
 
-    List<Team> getTeams(final int count, final Conference conference, final Division division);
+    List<Team> getTeams(final Optional<Integer> count, final Conference conference, final Division division);
     Optional<Team> getTeam(final int id);
 }

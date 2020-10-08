@@ -38,43 +38,31 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public List<Team> getTeams(final int count, final Conference conference, final Division division) {
+    public List<Team> getTeams(final Optional<Integer> count, final Conference conference, final Division division) {
         List<Team> teams = teamRepository.findAll();
         Predicate<Team> teamPredicate = getTeamPredicateAccordingToConferenceAndDivision(conference, division);
-        
-        return teamPredicate == null
-                ? handleCount(count, teams)
-                : handleCount(count, handlePredicate(teams, teamPredicate));
+
+        return handleCount(count, teams, teamPredicate) ;
     }
 
     private Predicate<Team> getTeamPredicateAccordingToConferenceAndDivision(final Conference conference, final Division division) throws TeamQueryException {
-        Predicate<Team> teamPredicate;
 
-        if (conference == null && division == null) {
-            teamPredicate = null;
-        } else if (conference == null) {
-            teamPredicate = team -> team.getDivision().equals(division);
-        } else if (division == null) {
-            teamPredicate = team -> team.getConference().equals(conference);
-        } else {
-            if (!division.getConference().equals(conference)) {
-                throw new TeamQueryException("The given division is not part of the given conference!");
-            }
-
-            teamPredicate = team -> team.getConference().equals(conference) && team.getDivision().equals(division);
+        if (division != null && !division.getConference().equals(conference)) {
+            throw new TeamQueryException("The given division is not part of the given conference!");
         }
 
-        return teamPredicate;
+        Predicate<Team> divisionPredicate = division == null ? team -> true : team -> team.getDivision().equals(division);
+        Predicate<Team> conferencePredicate = conference == null ? team -> true : team -> team.getConference().equals(conference);
+
+        return divisionPredicate.and(conferencePredicate);
     }
 
-    private List<Team> handleCount(final int count, final List<Team> teams) {
-        return count == -1
-                ? teams
-                : teams.stream().limit(count).collect(Collectors.toUnmodifiableList());
-    }
-
-    private List<Team> handlePredicate(List<Team> teams, Predicate<Team> teamPredicate) {
-        return teams.stream().filter(teamPredicate).collect(Collectors.toUnmodifiableList());
+    private List<Team> handleCount(final Optional<Integer> count, final List<Team> teams, Predicate<Team> teamPredicate) {
+        return teams
+                .stream()
+                .filter(teamPredicate)
+                .limit(count.orElse(Integer.MAX_VALUE))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override

@@ -4,6 +4,7 @@ import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.language.SourceLocation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class TeamQueryException extends RuntimeException implements GraphQLError
 
     @Override
     public List<SourceLocation> getLocations() {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
