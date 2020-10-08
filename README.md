@@ -9,6 +9,17 @@ To run this project, you have to set up a PostgreSQL database with the following
 
 This information can be found in the **application.yml** file as well.
 
+### Database modification
+#### Enums
+Two enums should be created manually, because it cannot be done automatically:
+* `CREATE TYPE conference AS ENUM ('East', 'West');`
+* `CREATE TYPE division AS ENUM ('Pacific', 'Southeast', 'southwest', 'atlantic', 'northwest', 'central');`
+
+#### Columns
+Run these two commands to change the type of the columns from TEXT to the corresponding enum type:
+* `ALTER TABLE team ALTER COLUMN conference TYPE conference USING conference::conference;`
+* `ALTER TABLE team ALTER COLUMN division TYPE division USING division::division;`
+
 The project doesn't have any profiling yet, so it basically runs in **dev** mode.
 
 ## Startup

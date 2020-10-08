@@ -15,11 +15,11 @@ public class PlayerQuery implements GraphQLQueryResolver {
 
     private final PlayerService playerService;
 
-    public List<Player> getPlayers(final int count) {
+    public List<Player> players(final int count) {
         return playerService.getPlayers(count);
     }
 
-    public Optional<Player> getPlayer(final int id) {
+    public Optional<Player> player(final int id) {
         return playerService.getPlayer(id);
     }
 }
