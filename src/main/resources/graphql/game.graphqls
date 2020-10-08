@@ -11,3 +11,9 @@ type Game {
     homeTeam: Team!,
     visitorTeam: Team!
 }
+
+extend type Query {
+    # Give -1 to get all games.
+    games(count: Int): [Game]
+    game(id: ID): Game
+}

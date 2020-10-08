@@ -10,3 +10,9 @@ type Player {
     games: [Game]!,
     stats: [Stats]!
 }
+
+extend type Query {
+    # Give -1 to get all players.
+    players(count: Int): [Player]
+    player(id: ID): Player
+}
