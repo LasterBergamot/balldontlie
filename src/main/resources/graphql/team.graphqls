@@ -16,3 +16,17 @@ type Query {
     teams(count: Int!, conference: String, division: String): [Team]
     team(id: ID!): Team
 }
+
+enum Conference {
+    EAST,
+    WEST
+}
+
+enum Division {
+    ATLANTIC,
+    SOUTHEAST,
+    PACIFIC,
+    CENTRAL,
+    NORTHWEST,
+    SOUTHWEST
+}
