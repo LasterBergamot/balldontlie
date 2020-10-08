@@ -10,7 +10,9 @@ type Team {
 }
 
 type Query {
-    # Give -1 to get all teams.
-    teams(count: Int): [Team]
-    team(id: ID): Team
+    # count: the desired number of teams. -1: all of the teams.
+    # conference: get teams from the given conference: East or West.
+    # division: get team from the given division: Atlantic, Southeast, Pacific, Central, Northwest and Southwest.
+    teams(count: Int!, conference: String, division: String): [Team]
+    team(id: ID!): Team
 }

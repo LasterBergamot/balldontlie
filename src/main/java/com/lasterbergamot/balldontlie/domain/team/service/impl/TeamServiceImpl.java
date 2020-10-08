@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,12 +35,33 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public List<Team> getTeams(final int count) {
+    public List<Team> getTeams(final int count, final String conference, final String division) {
         List<Team> teams = teamRepository.findAll();
+        Predicate<Team> teamPredicate;
 
+        if (conference == null && division == null) {
+            teamPredicate = null;
+        } else if (conference == null) {
+            teamPredicate = team -> team.getDivision().equals(division);
+        } else if (division == null) {
+            teamPredicate = team -> team.getConference().equals(conference);
+        } else {
+            teamPredicate = team -> team.getConference().equals(conference) && team.getDivision().equals(division);
+        }
+
+        return teamPredicate == null
+                ? handleCount(count, teams)
+                : handleCount(count, handlePredicate(teams, teamPredicate));
+    }
+
+    private List<Team> handleCount(final int count, final List<Team> teams) {
         return count == -1
                 ? teams
                 : teams.stream().limit(count).collect(Collectors.toUnmodifiableList());
+    }
+
+    private List<Team> handlePredicate(List<Team> teams, Predicate<Team> teamPredicate) {
+        return teams.stream().filter(teamPredicate).collect(Collectors.toUnmodifiableList());
     }
 
     @Override
