@@ -104,7 +104,7 @@ public class StatsServiceImpl implements StatsService {
 
     private List<CompletableFuture<StatsDTOWrapper>> createCompletableFuturesFromTheAPICalls(Integer totalPages) {
         List<CompletableFuture<StatsDTOWrapper>> completableFutureList = new ArrayList<>();
-        int maxNumberOfRequests = Math.min(totalPages, 8);
+        int maxNumberOfRequests = Math.min(totalPages, 13);
 
         int min = 2;
         int max = totalPages - maxNumberOfRequests;

@@ -111,7 +111,7 @@ public class GameServiceImpl implements GameService {
         // - all of the teams were get in 1 request
         // - all of the players were get in 33 requests
         // -> 26 requests remain for this minute, because of the 60 requests/min limit
-        int maxNumberOfRequests = Math.min(totalPages, 10);
+        int maxNumberOfRequests = Math.min(totalPages, 13);
 
         int min = 2;
         int max = totalPages - maxNumberOfRequests;
