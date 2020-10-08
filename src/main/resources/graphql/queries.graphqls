@@ -1,0 +1,17 @@
+type Query {
+    # Give -1 to get all teams.
+    teams(count: Int): [Team]
+    team(id: ID): Team
+
+    # Give -1 to get all players.
+    players(count: Int): [Player]
+    player(id: ID): Player
+
+    # Give -1 to get all games.
+    games(count: Int): [Game]
+    game(id: ID): Game
+
+    # Give -1 to get all stats.
+    allStats(count: Int): [Stats]
+    stats(id: ID): Stats
+}

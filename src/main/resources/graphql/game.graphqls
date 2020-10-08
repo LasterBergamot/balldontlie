@@ -1,0 +1,13 @@
+type Game {
+    id: ID!,
+    date: String!,
+    homeTeamScore: Int!,
+    visitorTeamScore: Int!,
+    season: Int!,
+    period: Int!,
+    status: String!,
+    time: String!,
+    postseason: Boolean!,
+    homeTeam: Team!,
+    visitorTeam: Team!
+}
