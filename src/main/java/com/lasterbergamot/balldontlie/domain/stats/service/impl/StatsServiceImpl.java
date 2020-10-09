@@ -1,5 +1,6 @@
 package com.lasterbergamot.balldontlie.domain.stats.service.impl;
 
+import com.lasterbergamot.balldontlie.client.ThrottledRestTemplate;
 import com.lasterbergamot.balldontlie.database.model.game.Game;
 import com.lasterbergamot.balldontlie.database.model.player.Player;
 import com.lasterbergamot.balldontlie.database.model.stats.Stats;
@@ -13,7 +14,6 @@ import com.lasterbergamot.balldontlie.domain.stats.transform.StatsTransformer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,7 +34,7 @@ public class StatsServiceImpl implements StatsService, DataImporter {
     private final StatsRepository statsRepository;
     private final GameService gameService;
     private final StatsTransformer statsTransformer;
-    private final RestTemplate restTemplate;
+    private final ThrottledRestTemplate restTemplate;
 
     @Override
     public void getAllStatsFromBalldontlieAPI() {

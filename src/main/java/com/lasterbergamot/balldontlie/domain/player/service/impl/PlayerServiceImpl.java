@@ -1,5 +1,6 @@
 package com.lasterbergamot.balldontlie.domain.player.service.impl;
 
+import com.lasterbergamot.balldontlie.client.ThrottledRestTemplate;
 import com.lasterbergamot.balldontlie.database.model.player.Player;
 import com.lasterbergamot.balldontlie.database.model.team.Team;
 import com.lasterbergamot.balldontlie.database.repository.player.PlayerRepository;
@@ -11,7 +12,6 @@ import com.lasterbergamot.balldontlie.domain.player.transform.PlayerTransformer;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,7 +29,7 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
 
     private final PlayerRepository playerRepository;
     private final PlayerTransformer playerTransformer;
-    private final RestTemplate restTemplate;
+    private final ThrottledRestTemplate restTemplate;
 
     @Override
     public void getAllPlayersFromBalldontlieAPI() {

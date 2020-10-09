@@ -1,5 +1,6 @@
 package com.lasterbergamot.balldontlie.domain.team.service.impl;
 
+import com.lasterbergamot.balldontlie.client.ThrottledRestTemplate;
 import com.lasterbergamot.balldontlie.database.model.team.Conference;
 import com.lasterbergamot.balldontlie.database.model.team.Division;
 import com.lasterbergamot.balldontlie.database.model.team.Team;
@@ -12,7 +13,6 @@ import com.lasterbergamot.balldontlie.graphql.team.exception.TeamQueryException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +28,7 @@ public class TeamServiceImpl implements TeamService, DataImporter {
 
     private final TeamRepository teamRepository;
     private final TeamTransformer teamTransformer;
-    private final RestTemplate restTemplate;
+    private final ThrottledRestTemplate restTemplate;
 
     @Override
     public void getAllTeamsFromBalldontlieAPI() {
