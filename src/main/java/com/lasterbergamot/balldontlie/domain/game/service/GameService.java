@@ -10,6 +10,13 @@ public interface GameService {
     void getAllGamesFromBalldontlieAPI();
 
     List<Game> getGames(Player player);
-    List<Game> getGames(final int count);
+    List<Game> getGames(final Optional<Integer> count);
     Optional<Game> getGame(final int id);
+
+    Game createGame(final String date,
+                    final Integer homeTeamScore, final Integer visitorTeamScore,
+                    final Integer season, final Integer period,
+                    final String status, final String time,
+                    final Boolean postseason, final Integer homeTeamId,
+                    final Integer visitorTeamId);
 }

@@ -1,3 +1,7 @@
+DROP SEQUENCE IF EXISTS seq_game_id;
+CREATE SEQUENCE seq_game_id;
+SELECT setval('seq_game_id', (SELECT MAX(id) + 1 FROM game));
+
 CREATE TABLE IF NOT EXISTS team (
     id              INTEGER PRIMARY KEY,
     abbreviation    TEXT        NOT NULL,
