@@ -107,7 +107,7 @@ public class GameServiceImpl implements GameService {
         checkAbsence(teamService.getTeam(visitorTeam.getId()), "The given visitor team does not exist in the database!");
     }
 
-    private <T> void checkAbsence(Optional<? extends T> inputToValidate, String errorMessage) {
+    private void checkAbsence(Optional<Team> inputToValidate, String errorMessage) {
         inputToValidate.orElseThrow(() -> new GameMutationException(errorMessage));
     }
 
