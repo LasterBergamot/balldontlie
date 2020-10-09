@@ -5,7 +5,7 @@ type Player {
     position: String!,
     heightFeet: Int!,
     heightInches: Int!,
-    weightPounds: Int!
+    weight: Weight!
     team: Team!,
     games: [Game]!,
     stats: [Stats]!
@@ -16,3 +16,5 @@ extend type Query {
     players(count: Int): [Player]
     player(id: ID): Player
 }
+
+scalar Weight

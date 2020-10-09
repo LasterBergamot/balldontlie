@@ -1,6 +1,7 @@
 package com.lasterbergamot.balldontlie.database.model.player;
 
 import com.lasterbergamot.balldontlie.database.model.team.Team;
+import com.lasterbergamot.balldontlie.graphql.scalar.Weight;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -69,5 +70,9 @@ public class Player {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public Weight getWeight() {
+        return Weight.restore(weightPounds);
     }
 }
