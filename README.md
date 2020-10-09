@@ -13,7 +13,7 @@ This information can be found in the **application.yml** file as well.
 #### Enums
 Two enums should be created manually, because it cannot be done automatically:
 * `CREATE TYPE conference AS ENUM ('East', 'West');`
-* `CREATE TYPE division AS ENUM ('Pacific', 'Southeast', 'southwest', 'atlantic', 'northwest', 'central');`
+* `CREATE TYPE division AS ENUM ('Pacific', 'Southeast', 'Southwest', 'Atlantic', 'Northwest', 'Central');`
 
 #### Columns
 Run these two commands to change the type of the columns from TEXT to the corresponding enum type:
