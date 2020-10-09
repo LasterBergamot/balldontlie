@@ -12,10 +12,12 @@ This information can be found in the **application.yml** file as well.
 The project doesn't have any profiling yet, so it basically runs in **dev** mode.
 
 ## Startup
-At every startup, the application will try to get some data from the [balldontlie API](https://www.balldontlie.io/#introduction), 
+During startup, the application will try to get some data from the [balldontlie API](https://www.balldontlie.io/#introduction),
 and will persist some of it, if it doesn't exist in the database.
 
 This data fetching can be seen in the console logs.
+
+This data import can be disabled by adding `-DappConfig.skipImport=true` as a VM option.
 
 ## Usage
 After the successful startup, 
