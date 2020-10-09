@@ -97,6 +97,8 @@ public class GameServiceImpl implements GameService {
         Game game = createGameFromMutationInputs(gameRepository.getNextId(), date, homeTeamScore, visitorTeamScore, season, period, status, time, postseason,
                 validationResults.get("homeTeam"), validationResults.get("visitorTeam"));
 
+        log.info("Saved Game: {}", game);
+
         return gameRepository.save(game);
     }
 
