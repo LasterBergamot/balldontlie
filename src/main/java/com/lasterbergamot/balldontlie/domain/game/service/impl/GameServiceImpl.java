@@ -4,6 +4,7 @@ import com.lasterbergamot.balldontlie.database.model.game.Game;
 import com.lasterbergamot.balldontlie.database.model.player.Player;
 import com.lasterbergamot.balldontlie.database.model.team.Team;
 import com.lasterbergamot.balldontlie.database.repository.game.GameRepository;
+import com.lasterbergamot.balldontlie.domain.DataImporter;
 import com.lasterbergamot.balldontlie.domain.game.model.GameDTOWrapper;
 import com.lasterbergamot.balldontlie.domain.game.service.GameService;
 import com.lasterbergamot.balldontlie.domain.game.transform.GameTransformer;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class GameServiceImpl implements GameService {
+public class GameServiceImpl implements GameService, DataImporter {
 
     private final GameRepository gameRepository;
     private final GameTransformer gameTransformer;
@@ -103,6 +104,11 @@ public class GameServiceImpl implements GameService {
         } else {
             log.info("No new games are available!");
         }
+    }
+
+    @Override
+    public void doImport() {
+        getAllGamesFromBalldontlieAPI();
     }
 
     private List<CompletableFuture<GameDTOWrapper>> createCompletableFuturesFromTheAPICalls(int totalPages) {
