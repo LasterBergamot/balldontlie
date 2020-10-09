@@ -8,6 +8,8 @@ import com.lasterbergamot.balldontlie.domain.game.model.GameDTOWrapper;
 import com.lasterbergamot.balldontlie.domain.game.service.GameService;
 import com.lasterbergamot.balldontlie.domain.game.transform.GameTransformer;
 import com.lasterbergamot.balldontlie.domain.model.meta.Meta;
+import com.lasterbergamot.balldontlie.domain.team.service.TeamService;
+import com.lasterbergamot.balldontlie.graphql.game.exception.GameMutationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ public class GameServiceImpl implements GameService {
 
     private final GameRepository gameRepository;
     private final GameTransformer gameTransformer;
+    private final TeamService teamService;
     private final RestTemplate restTemplate;
 
     @Override
@@ -88,7 +91,33 @@ public class GameServiceImpl implements GameService {
                            String status, String time,
                            Boolean postseason, Team homeTeam,
                            Team visitorTeam) {
-        Game game = Game.builder()
+        validateGameMutationInputs(id, homeTeam, visitorTeam);
+
+        Game game = createGameFromMutationInputs(id, date, homeTeamScore, visitorTeamScore, season, period, status, time, postseason, homeTeam, visitorTeam);
+
+        return gameRepository.save(game);
+    }
+
+    private void validateGameMutationInputs(Integer id, Team homeTeam, Team visitorTeam) {
+        gameRepository.findById(id).ifPresent(input -> {
+            throw new GameMutationException("A game with this id is already present!");
+        });
+
+        checkAbsence(teamService.getTeam(homeTeam.getId()), "The given home team does not exist in the database!");
+        checkAbsence(teamService.getTeam(visitorTeam.getId()), "The given visitor team does not exist in the database!");
+    }
+
+    private <T> void checkAbsence(Optional<? extends T> inputToValidate, String errorMessage) {
+        inputToValidate.orElseThrow(() -> new GameMutationException(errorMessage));
+    }
+
+    private Game createGameFromMutationInputs(Integer id, String date,
+                                              Integer homeTeamScore, Integer visitorTeamScore,
+                                              Integer season, Integer period,
+                                              String status, String time,
+                                              Boolean postseason, Team homeTeam,
+                                              Team visitorTeam) {
+        return Game.builder()
                 .id(id)
                 .date(LocalDate.parse(date))
                 .homeTeam(homeTeam)
@@ -101,8 +130,6 @@ public class GameServiceImpl implements GameService {
                 .visitorTeam(visitorTeam)
                 .visitorTeamScore(visitorTeamScore)
                 .build();
-
-        return gameRepository.save(game);
     }
 
     private void handlePossibleNewGames(GameDTOWrapper gameDTOWrapper) {
