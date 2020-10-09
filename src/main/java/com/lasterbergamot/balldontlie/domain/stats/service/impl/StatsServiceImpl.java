@@ -4,6 +4,7 @@ import com.lasterbergamot.balldontlie.database.model.game.Game;
 import com.lasterbergamot.balldontlie.database.model.player.Player;
 import com.lasterbergamot.balldontlie.database.model.stats.Stats;
 import com.lasterbergamot.balldontlie.database.repository.stats.StatsRepository;
+import com.lasterbergamot.balldontlie.domain.DataImporter;
 import com.lasterbergamot.balldontlie.domain.game.service.GameService;
 import com.lasterbergamot.balldontlie.domain.model.meta.Meta;
 import com.lasterbergamot.balldontlie.domain.stats.model.StatsDTOWrapper;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class StatsServiceImpl implements StatsService {
+public class StatsServiceImpl implements StatsService, DataImporter {
 
     private final StatsRepository statsRepository;
     private final GameService gameService;
@@ -88,6 +89,11 @@ public class StatsServiceImpl implements StatsService {
         } else {
             log.info("No new stats available!");
         }
+    }
+
+    @Override
+    public void doImport() {
+        getAllStatsFromBalldontlieAPI();
     }
 
     private void handlePossibleNonStoredGames(Set<Stats> statsToSave) {

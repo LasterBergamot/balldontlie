@@ -4,6 +4,7 @@ import com.lasterbergamot.balldontlie.database.model.team.Conference;
 import com.lasterbergamot.balldontlie.database.model.team.Division;
 import com.lasterbergamot.balldontlie.database.model.team.Team;
 import com.lasterbergamot.balldontlie.database.repository.team.TeamRepository;
+import com.lasterbergamot.balldontlie.domain.DataImporter;
 import com.lasterbergamot.balldontlie.domain.team.model.TeamDTOWrapper;
 import com.lasterbergamot.balldontlie.domain.team.service.TeamService;
 import com.lasterbergamot.balldontlie.domain.team.transform.TeamTransformer;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class TeamServiceImpl implements TeamService {
+public class TeamServiceImpl implements TeamService, DataImporter {
 
     private final TeamRepository teamRepository;
     private final TeamTransformer teamTransformer;
@@ -68,6 +69,11 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Optional<Team> getTeam(final int id) {
         return teamRepository.findById(id);
+    }
+
+    @Override
+    public void doImport() {
+        getAllTeamsFromBalldontlieAPI();
     }
 
     private void handlePossibleNewTeams(TeamDTOWrapper teamDTOWrapper) {

@@ -3,6 +3,7 @@ package com.lasterbergamot.balldontlie.domain.player.service.impl;
 import com.lasterbergamot.balldontlie.database.model.player.Player;
 import com.lasterbergamot.balldontlie.database.model.team.Team;
 import com.lasterbergamot.balldontlie.database.repository.player.PlayerRepository;
+import com.lasterbergamot.balldontlie.domain.DataImporter;
 import com.lasterbergamot.balldontlie.domain.model.meta.Meta;
 import com.lasterbergamot.balldontlie.domain.player.model.PlayerDTOWrapper;
 import com.lasterbergamot.balldontlie.domain.player.service.PlayerService;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class PlayerServiceImpl implements PlayerService {
+public class PlayerServiceImpl implements PlayerService, DataImporter {
 
     private final PlayerRepository playerRepository;
     private final PlayerTransformer playerTransformer;
@@ -37,6 +38,11 @@ public class PlayerServiceImpl implements PlayerService {
 
         Optional.ofNullable(playerDTOWrapper)
                 .ifPresentOrElse(this::handlePossibleNewPlayers, () -> log.error("The PlayerDTOWrapper object got from the API was null!"));
+    }
+
+    @Override
+    public void doImport() {
+        getAllPlayersFromBalldontlieAPI();
     }
 
     private void handlePossibleNewPlayers(PlayerDTOWrapper playerDTOWrapper) {
