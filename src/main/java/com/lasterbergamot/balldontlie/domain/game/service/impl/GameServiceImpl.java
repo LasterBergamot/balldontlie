@@ -1,5 +1,6 @@
 package com.lasterbergamot.balldontlie.domain.game.service.impl;
 
+import com.lasterbergamot.balldontlie.client.ThrottledRestTemplate;
 import com.lasterbergamot.balldontlie.database.model.game.Game;
 import com.lasterbergamot.balldontlie.database.model.player.Player;
 import com.lasterbergamot.balldontlie.database.model.team.Team;
@@ -12,7 +13,6 @@ import com.lasterbergamot.balldontlie.domain.model.meta.Meta;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,7 +22,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +31,7 @@ public class GameServiceImpl implements GameService, DataImporter {
 
     private final GameRepository gameRepository;
     private final GameTransformer gameTransformer;
-    private final RestTemplate restTemplate;
+    private final ThrottledRestTemplate restTemplate;
 
     @Override
     public void getAllGamesFromBalldontlieAPI() {
@@ -113,18 +112,8 @@ public class GameServiceImpl implements GameService, DataImporter {
 
     private List<CompletableFuture<GameDTOWrapper>> createCompletableFuturesFromTheAPICalls(int totalPages) {
         List<CompletableFuture<GameDTOWrapper>> completableFutureList = new ArrayList<>();
-        // if the app is started for the first time, then:
-        // - all of the teams were get in 1 request
-        // - all of the players were get in 33 requests
-        // -> 26 requests remain for this minute, because of the 60 requests/min limit
-        int maxNumberOfRequests = Math.min(totalPages, 13);
 
-        int min = 2;
-        int max = totalPages - maxNumberOfRequests;
-        int minLimit = ThreadLocalRandom.current().nextInt(max - min) + min;
-        int maxLimit = minLimit + maxNumberOfRequests;
-
-        for (int currentPage = minLimit; currentPage <= maxLimit; currentPage++) {
+        for (int currentPage = 2; currentPage <= totalPages; currentPage++) {
             int finalCurrentPage = currentPage;
             CompletableFuture<GameDTOWrapper> completableFuture = CompletableFuture.supplyAsync(
                     () -> restTemplate
