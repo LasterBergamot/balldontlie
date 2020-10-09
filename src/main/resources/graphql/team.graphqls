@@ -1,0 +1,33 @@
+type Team {
+    id: ID!,
+    abbreviation: String!,
+    city: String!,
+    conference: Conference!,
+    division: Division!,
+    fullName: String!,
+    name: String!,
+    players: [Player]!
+}
+
+type Query {
+    # No parameters: returns all teams.
+    # count: return the desired number of teams.
+    # conference: get teams from the given conference: East or West.
+    # division: get team from the given division: Atlantic, Southeast, Pacific, Central, Northwest and Southwest.
+    teams(count: Int, conference: Conference, division: Division): [Team]
+    team(id: ID!): Team
+}
+
+enum Conference {
+    East,
+    West
+}
+
+enum Division {
+    Atlantic,
+    Southeast,
+    Pacific,
+    Central,
+    Northwest,
+    Southwest
+}

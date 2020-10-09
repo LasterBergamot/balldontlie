@@ -1,0 +1,31 @@
+type Stats {
+    id: ID!,
+    player: Player!,
+    team: Team!,
+    game: Game!,
+    minutes: String,
+    points: Int,
+    assists: Int,
+    rebounds: Int,
+    defensiveRebounds: Int,
+    offensiveRebounds: Int,
+    blocks: Int,
+    steals: Int,
+    turnovers: Int,
+    personalFouls: Int,
+    fieldGoalsAttempted: Int,
+    fieldGoalsMade: Int,
+    fieldGoalPercentage: Float,
+    threePointersAttempted: Int,
+    threePointersMade: Int,
+    threePointerPercentage: Float,
+    freeThrowsAttempted: Int,
+    freeThrowsMade: Int,
+    freeThrowPercentage: Float
+}
+
+extend type Query {
+    # Give -1 to get all stats.
+    allStats(count: Int): [Stats]
+    stats(id: ID): Stats
+}

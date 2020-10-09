@@ -1,0 +1,20 @@
+type Player {
+    id: ID!,
+    firstName: String!,
+    lastName: String!,
+    position: String!,
+    heightFeet: Int!,
+    heightInches: Int!,
+    weight: Weight!
+    team: Team!,
+    games: [Game]!,
+    stats: [Stats]!
+}
+
+extend type Query {
+    # Give -1 to get all players.
+    players(count: Int): [Player]
+    player(id: ID): Player
+}
+
+scalar Weight

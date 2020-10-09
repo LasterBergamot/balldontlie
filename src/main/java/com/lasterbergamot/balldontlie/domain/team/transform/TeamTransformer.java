@@ -1,5 +1,7 @@
 package com.lasterbergamot.balldontlie.domain.team.transform;
 
+import com.lasterbergamot.balldontlie.database.model.team.Conference;
+import com.lasterbergamot.balldontlie.database.model.team.Division;
 import com.lasterbergamot.balldontlie.database.model.team.Team;
 import com.lasterbergamot.balldontlie.domain.team.model.TeamDTO;
 import org.springframework.stereotype.Component;
@@ -22,8 +24,8 @@ public class TeamTransformer {
                 .id(teamDTO.getId())
                 .abbreviation(teamDTO.getAbbreviation())
                 .city(teamDTO.getCity())
-                .conference(teamDTO.getConference())
-                .division(teamDTO.getDivision())
+                .conference(Conference.valueOf(teamDTO.getConference()))
+                .division(Division.valueOf(teamDTO.getDivision()))
                 .fullName(teamDTO.getFullName())
                 .name(teamDTO.getName())
                 .build();

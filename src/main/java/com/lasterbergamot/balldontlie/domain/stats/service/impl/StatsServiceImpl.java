@@ -1,6 +1,7 @@
 package com.lasterbergamot.balldontlie.domain.stats.service.impl;
 
 import com.lasterbergamot.balldontlie.database.model.game.Game;
+import com.lasterbergamot.balldontlie.database.model.player.Player;
 import com.lasterbergamot.balldontlie.database.model.stats.Stats;
 import com.lasterbergamot.balldontlie.database.repository.stats.StatsRepository;
 import com.lasterbergamot.balldontlie.domain.game.service.GameService;
@@ -53,6 +54,11 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
+    public List<Stats> getAllStats(Player player) {
+        return statsRepository.findAllByPlayer(player);
+    }
+
+    @Override
     public Optional<Stats> getStats(final int id) {
         return statsRepository.findById(id);
     }
@@ -98,7 +104,7 @@ public class StatsServiceImpl implements StatsService {
 
     private List<CompletableFuture<StatsDTOWrapper>> createCompletableFuturesFromTheAPICalls(Integer totalPages) {
         List<CompletableFuture<StatsDTOWrapper>> completableFutureList = new ArrayList<>();
-        int maxNumberOfRequests = Math.min(totalPages, 8);
+        int maxNumberOfRequests = Math.min(totalPages, 13);
 
         int min = 2;
         int max = totalPages - maxNumberOfRequests;

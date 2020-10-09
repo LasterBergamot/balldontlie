@@ -15,11 +15,11 @@ public class StatsQuery implements GraphQLQueryResolver {
 
     private final StatsService statsService;
 
-    public List<Stats> getAllStats(final int count) {
+    public List<Stats> allStats(final int count) {
         return statsService.getAllStats(count);
     }
 
-    public Optional<Stats> getStats(final int id) {
+    public Optional<Stats> stats(final int id) {
         return statsService.getStats(id);
     }
 }

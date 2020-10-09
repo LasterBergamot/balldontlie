@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS team (
     id              INTEGER PRIMARY KEY,
-    abbreviation    TEXT    NOT NULL,
-    city            TEXT    NOT NULL,
-    conference      TEXT    NOT NULL,
-    division        TEXT    NOT NULL,
-    full_name       TEXT    NOT NULL,
-    name            TEXT    NOT NULL
+    abbreviation    TEXT        NOT NULL,
+    city            TEXT        NOT NULL,
+    conference      TEXT        NOT NULL,
+    division        TEXT        NOT NULL,
+    full_name       TEXT        NOT NULL,
+    name            TEXT        NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS player (

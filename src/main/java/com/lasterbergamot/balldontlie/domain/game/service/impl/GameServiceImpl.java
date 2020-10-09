@@ -1,6 +1,8 @@
 package com.lasterbergamot.balldontlie.domain.game.service.impl;
 
 import com.lasterbergamot.balldontlie.database.model.game.Game;
+import com.lasterbergamot.balldontlie.database.model.player.Player;
+import com.lasterbergamot.balldontlie.database.model.team.Team;
 import com.lasterbergamot.balldontlie.database.repository.game.GameRepository;
 import com.lasterbergamot.balldontlie.domain.game.model.GameDTOWrapper;
 import com.lasterbergamot.balldontlie.domain.game.service.GameService;
@@ -13,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -37,6 +40,30 @@ public class GameServiceImpl implements GameService {
 
         Optional.ofNullable(gameDTOWrapper)
                 .ifPresentOrElse(this::handlePossibleNewGames, () -> log.error("The GameDTOWrapper got from the API was null!"));
+    }
+
+    @Override
+    public List<Game> getGames(Player player) {
+        Team playerTeam = player.getTeam();
+
+        if (playerTeam == null) {
+            return new ArrayList<>();
+        }
+
+        List<Game> games = gameRepository.findAll();
+
+        for (Iterator<Game> gameIterator = games.iterator(); gameIterator.hasNext();) {
+            Game game = gameIterator.next();
+            Team homeTeam = game.getHomeTeam();
+            Team visitorTeam = game.getVisitorTeam();
+            boolean thePlayerIsNotInEitherTeam = !playerTeam.equals(homeTeam) && !playerTeam.equals(visitorTeam);
+
+            if (thePlayerIsNotInEitherTeam) {
+                gameIterator.remove();
+            }
+        }
+
+        return games;
     }
 
     @Override
@@ -84,7 +111,7 @@ public class GameServiceImpl implements GameService {
         // - all of the teams were get in 1 request
         // - all of the players were get in 33 requests
         // -> 26 requests remain for this minute, because of the 60 requests/min limit
-        int maxNumberOfRequests = Math.min(totalPages, 10);
+        int maxNumberOfRequests = Math.min(totalPages, 13);
 
         int min = 2;
         int max = totalPages - maxNumberOfRequests;

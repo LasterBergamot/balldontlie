@@ -1,6 +1,7 @@
 package com.lasterbergamot.balldontlie.domain.player.service.impl;
 
 import com.lasterbergamot.balldontlie.database.model.player.Player;
+import com.lasterbergamot.balldontlie.database.model.team.Team;
 import com.lasterbergamot.balldontlie.database.repository.player.PlayerRepository;
 import com.lasterbergamot.balldontlie.domain.model.meta.Meta;
 import com.lasterbergamot.balldontlie.domain.player.model.PlayerDTOWrapper;
@@ -129,6 +130,11 @@ public class PlayerServiceImpl implements PlayerService {
         return count == -1
                 ? players
                 : players.stream().limit(count).collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public List<Player> getPlayers(Team team) {
+        return playerRepository.findAllByTeam(team);
     }
 
     @Override
