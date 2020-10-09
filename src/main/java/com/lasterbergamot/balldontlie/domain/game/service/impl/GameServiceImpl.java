@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -89,26 +90,31 @@ public class GameServiceImpl implements GameService {
                            Integer homeTeamScore, Integer visitorTeamScore,
                            Integer season, Integer period,
                            String status, String time,
-                           Boolean postseason, Team homeTeam,
-                           Team visitorTeam) {
-        validateGameMutationInputs(id, homeTeam, visitorTeam);
+                           Boolean postseason, Integer homeTeamId,
+                           Integer visitorTeamId) {
 
-        Game game = createGameFromMutationInputs(id, date, homeTeamScore, visitorTeamScore, season, period, status, time, postseason, homeTeam, visitorTeam);
+        Map<String, Team> validationResults = validateMutationInputs(id, homeTeamId, visitorTeamId);
+
+        //TODO: create db query to get max of id => +1 to get new id
+        Game game = createGameFromMutationInputs(id, date, homeTeamScore, visitorTeamScore, season, period, status, time, postseason,
+                validationResults.get("homeTeam"), validationResults.get("visitorTeam"));
 
         return gameRepository.save(game);
     }
 
-    private void validateGameMutationInputs(Integer id, Team homeTeam, Team visitorTeam) {
+    private Map<String, Team> validateMutationInputs(Integer id, Integer homeTeamId, Integer visitorTeamId) {
         gameRepository.findById(id).ifPresent(input -> {
             throw new GameMutationException("A game with this id is already present!");
         });
 
-        checkAbsence(teamService.getTeam(homeTeam.getId()), "The given home team does not exist in the database!");
-        checkAbsence(teamService.getTeam(visitorTeam.getId()), "The given visitor team does not exist in the database!");
+        Team homeTeam = checkAbsence(teamService.getTeam(homeTeamId), "The given home team does not exist in the database!");
+        Team visitorTeam = checkAbsence(teamService.getTeam(visitorTeamId), "The given visitor team does not exist in the database!");
+
+        return Map.of("homeTeam", homeTeam, "visitorTeam", visitorTeam);
     }
 
-    private void checkAbsence(Optional<Team> inputToValidate, String errorMessage) {
-        inputToValidate.orElseThrow(() -> new GameMutationException(errorMessage));
+    private Team checkAbsence(Optional<Team> inputToValidate, String errorMessage) {
+        return inputToValidate.orElseThrow(() -> new GameMutationException(errorMessage));
     }
 
     private Game createGameFromMutationInputs(Integer id, String date,

@@ -43,7 +43,7 @@ type Mutation {
         status: String!,
         time: String!,
         postseason: Boolean!,
-        homeTeam: TeamInput!,
-        visitorTeam: TeamInput!
+        homeTeamId: ID!,
+        visitorTeamId: ID!
     ): Game
 }

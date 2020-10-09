@@ -17,8 +17,8 @@ public class GameMutation implements GraphQLMutationResolver {
                            final Integer homeTeamScore, final Integer visitorTeamScore,
                            final Integer season, final Integer period,
                            final String status, final String time,
-                           final Boolean postseason, final Team homeTeam,
-                           final Team visitorTeam) {
-        return gameService.createGame(id, date, homeTeamScore, visitorTeamScore, season, period, status, time, postseason, homeTeam, visitorTeam);
+                           final Boolean postseason, final Integer homeTeamId,
+                           final Integer visitorTeamId) {
+        return gameService.createGame(id, date, homeTeamScore, visitorTeamScore, season, period, status, time, postseason, homeTeamId, visitorTeamId);
     }
 }
