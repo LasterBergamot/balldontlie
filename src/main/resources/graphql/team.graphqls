@@ -9,16 +9,6 @@ type Team {
     players: [Player]!
 }
 
-input TeamInput {
-    id: ID!,
-    abbreviation: String!,
-    city: String!,
-    conference: Conference!,
-    division: Division!,
-    fullName: String!,
-    name: String!
-}
-
 type Query {
     # No parameters: returns all teams.
     # count: return the desired number of teams.

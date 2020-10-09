@@ -12,20 +12,6 @@ type Game {
     visitorTeam: Team!
 }
 
-input GameInput {
-    id: ID!,
-    date: String!,
-    homeTeamScore: Int!,
-    visitorTeamScore: Int!,
-    season: Int!,
-    period: Int!,
-    status: String!,
-    time: String!,
-    postseason: Boolean!,
-    homeTeam: TeamInput!,
-    visitorTeam: TeamInput!
-}
-
 extend type Query {
     # Give -1 to get all games.
     games(count: Int): [Game]
