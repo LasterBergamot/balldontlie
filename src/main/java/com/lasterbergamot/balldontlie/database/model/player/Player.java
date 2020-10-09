@@ -1,7 +1,7 @@
 package com.lasterbergamot.balldontlie.database.model.player;
 
 import com.lasterbergamot.balldontlie.database.model.team.Team;
-import com.lasterbergamot.balldontlie.domain.Weight;
+import com.lasterbergamot.balldontlie.graphql.scalar.Weight;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -73,6 +73,6 @@ public class Player {
     }
 
     public Weight getWeight() {
-        return Weight.from(weightPounds);
+        return Weight.restore(weightPounds);
     }
 }

@@ -1,6 +1,5 @@
 package com.lasterbergamot.balldontlie.graphql.scalar;
 
-import com.lasterbergamot.balldontlie.domain.Weight;
 import graphql.schema.Coercing;
 import graphql.schema.CoercingParseLiteralException;
 import graphql.schema.CoercingParseValueException;
