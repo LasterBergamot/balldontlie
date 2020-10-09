@@ -9,15 +9,19 @@ import com.lasterbergamot.balldontlie.domain.game.model.GameDTOWrapper;
 import com.lasterbergamot.balldontlie.domain.game.service.GameService;
 import com.lasterbergamot.balldontlie.domain.game.transform.GameTransformer;
 import com.lasterbergamot.balldontlie.domain.model.meta.Meta;
+import com.lasterbergamot.balldontlie.domain.team.service.TeamService;
+import com.lasterbergamot.balldontlie.graphql.game.exception.GameMutationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -32,6 +36,7 @@ public class GameServiceImpl implements GameService, DataImporter {
 
     private final GameRepository gameRepository;
     private final GameTransformer gameTransformer;
+    private final TeamService teamService;
     private final RestTemplate restTemplate;
 
     @Override
@@ -68,17 +73,64 @@ public class GameServiceImpl implements GameService, DataImporter {
     }
 
     @Override
-    public List<Game> getGames(final int count) {
-        List<Game> games = gameRepository.findAll();
-
-        return count == -1
-                ? games
-                : games.stream().limit(count).collect(Collectors.toUnmodifiableList());
+    public List<Game> getGames(final Optional<Integer> count) {
+        return gameRepository
+                .findAll()
+                .stream()
+                .limit(count.orElse(Integer.MAX_VALUE))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
     public Optional<Game> getGame(final int id) {
         return gameRepository.findById(id);
+    }
+
+    @Override
+    public Game createGame(String date,
+                           Integer homeTeamScore, Integer visitorTeamScore,
+                           Integer season, Integer period,
+                           String status, String time,
+                           Boolean postseason, Integer homeTeamId,
+                           Integer visitorTeamId) {
+        Map<String, Team> validationResults = validateMutationInputs(homeTeamId, visitorTeamId);
+
+        Game game = createGameFromMutationInputs(gameRepository.getNextId(), date, homeTeamScore, visitorTeamScore, season, period, status, time, postseason,
+                validationResults.get("homeTeam"), validationResults.get("visitorTeam"));
+
+        return gameRepository.save(game);
+    }
+
+    private Map<String, Team> validateMutationInputs(Integer homeTeamId, Integer visitorTeamId) {
+        Team homeTeam = checkAbsence(teamService.getTeam(homeTeamId), "The given home team does not exist in the database!");
+        Team visitorTeam = checkAbsence(teamService.getTeam(visitorTeamId), "The given visitor team does not exist in the database!");
+
+        return Map.of("homeTeam", homeTeam, "visitorTeam", visitorTeam);
+    }
+
+    private Team checkAbsence(Optional<Team> inputToValidate, String errorMessage) {
+        return inputToValidate.orElseThrow(() -> new GameMutationException(errorMessage));
+    }
+
+    private Game createGameFromMutationInputs(Integer id, String date,
+                                              Integer homeTeamScore, Integer visitorTeamScore,
+                                              Integer season, Integer period,
+                                              String status, String time,
+                                              Boolean postseason, Team homeTeam,
+                                              Team visitorTeam) {
+        return Game.builder()
+                .id(id)
+                .date(LocalDate.parse(date))
+                .homeTeam(homeTeam)
+                .homeTeamScore(homeTeamScore)
+                .period(period)
+                .postseason(postseason)
+                .season(season)
+                .status(status)
+                .time(time)
+                .visitorTeam(visitorTeam)
+                .visitorTeamScore(visitorTeamScore)
+                .build();
     }
 
     private void handlePossibleNewGames(GameDTOWrapper gameDTOWrapper) {

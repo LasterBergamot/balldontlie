@@ -17,3 +17,18 @@ extend type Query {
     games(count: Int): [Game]
     game(id: ID): Game
 }
+
+type Mutation {
+    createGame(
+        date: String!,
+        homeTeamScore: Int!,
+        visitorTeamScore: Int!,
+        season: Int!,
+        period: Int!,
+        status: String!,
+        time: String!,
+        postseason: Boolean!,
+        homeTeamId: ID!,
+        visitorTeamId: ID!
+    ): Game
+}
