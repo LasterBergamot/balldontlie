@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -95,8 +94,7 @@ public class GameServiceImpl implements GameService {
                            Integer visitorTeamId) {
         Map<String, Team> validationResults = validateMutationInputs(homeTeamId, visitorTeamId);
 
-        AtomicInteger atomicGameId = new AtomicInteger(gameRepository.getMaximumId());
-        Game game = createGameFromMutationInputs(atomicGameId.incrementAndGet(), date, homeTeamScore, visitorTeamScore, season, period, status, time, postseason,
+        Game game = createGameFromMutationInputs(gameRepository.getNextId(), date, homeTeamScore, visitorTeamScore, season, period, status, time, postseason,
                 validationResults.get("homeTeam"), validationResults.get("visitorTeam"));
 
         return gameRepository.save(game);

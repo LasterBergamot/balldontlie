@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GameRepository extends JpaRepository<Game, Integer> {
-    @Query("SELECT MAX(g.id) FROM Game g")
-    Integer getMaximumId();
+    @Query(value = "SELECT nextval('seq_game_id')", nativeQuery = true)
+    Integer getNextId();
 }
