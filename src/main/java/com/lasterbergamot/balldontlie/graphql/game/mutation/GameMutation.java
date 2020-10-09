@@ -13,12 +13,12 @@ public class GameMutation implements GraphQLMutationResolver {
 
     private final GameService gameService;
 
-    public Game createGame(final Integer id, final String date,
+    public Game createGame(final String date,
                            final Integer homeTeamScore, final Integer visitorTeamScore,
                            final Integer season, final Integer period,
                            final String status, final String time,
                            final Boolean postseason, final Integer homeTeamId,
                            final Integer visitorTeamId) {
-        return gameService.createGame(id, date, homeTeamScore, visitorTeamScore, season, period, status, time, postseason, homeTeamId, visitorTeamId);
+        return gameService.createGame(date, homeTeamScore, visitorTeamScore, season, period, status, time, postseason, homeTeamId, visitorTeamId);
     }
 }

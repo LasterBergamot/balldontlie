@@ -13,7 +13,7 @@ public interface GameService {
     List<Game> getGames(final Optional<Integer> count);
     Optional<Game> getGame(final int id);
 
-    Game createGame(final Integer id, final String date,
+    Game createGame(final String date,
                     final Integer homeTeamScore, final Integer visitorTeamScore,
                     final Integer season, final Integer period,
                     final String status, final String time,

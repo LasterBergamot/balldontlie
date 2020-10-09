@@ -34,7 +34,6 @@ extend type Query {
 
 type Mutation {
     createGame(
-        id: ID!,
         date: String!,
         homeTeamScore: Int!,
         visitorTeamScore: Int!,

@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,27 +87,22 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Game createGame(Integer id, String date,
+    public Game createGame(String date,
                            Integer homeTeamScore, Integer visitorTeamScore,
                            Integer season, Integer period,
                            String status, String time,
                            Boolean postseason, Integer homeTeamId,
                            Integer visitorTeamId) {
+        Map<String, Team> validationResults = validateMutationInputs(homeTeamId, visitorTeamId);
 
-        Map<String, Team> validationResults = validateMutationInputs(id, homeTeamId, visitorTeamId);
-
-        //TODO: create db query to get max of id => +1 to get new id
-        Game game = createGameFromMutationInputs(id, date, homeTeamScore, visitorTeamScore, season, period, status, time, postseason,
+        AtomicInteger atomicGameId = new AtomicInteger(gameRepository.getMaximumId());
+        Game game = createGameFromMutationInputs(atomicGameId.incrementAndGet(), date, homeTeamScore, visitorTeamScore, season, period, status, time, postseason,
                 validationResults.get("homeTeam"), validationResults.get("visitorTeam"));
 
         return gameRepository.save(game);
     }
 
-    private Map<String, Team> validateMutationInputs(Integer id, Integer homeTeamId, Integer visitorTeamId) {
-        gameRepository.findById(id).ifPresent(input -> {
-            throw new GameMutationException("A game with this id is already present!");
-        });
-
+    private Map<String, Team> validateMutationInputs(Integer homeTeamId, Integer visitorTeamId) {
         Team homeTeam = checkAbsence(teamService.getTeam(homeTeamId), "The given home team does not exist in the database!");
         Team visitorTeam = checkAbsence(teamService.getTeam(visitorTeamId), "The given visitor team does not exist in the database!");
 
