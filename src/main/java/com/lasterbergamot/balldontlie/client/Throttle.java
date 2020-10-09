@@ -16,7 +16,7 @@ class Throttle {
 
     public Throttle(int capacity, Duration duration) {
         if (capacity <= 0) {
-            throw new IllegalArgumentException("Capacity must be geq 0!");
+            throw new IllegalArgumentException("Capacity must be greater than 0!");
         }
         this.capacity = capacity;
         this.duration = duration;

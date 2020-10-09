@@ -19,7 +19,7 @@ class ThrottleTest {
     private Throttle throttle;
 
     @Test
-    void shouldNotAllowManyRequests() {
+    void shouldNotAllowManyRequestsWithinDurationTimeframe() {
         throttle = new Throttle(LIMIT, DURATION);
 
         List<LocalDateTime> result = new LinkedList<>();
