@@ -2,7 +2,6 @@ package com.lasterbergamot.balldontlie.graphql.game.mutation;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.lasterbergamot.balldontlie.database.model.game.Game;
-import com.lasterbergamot.balldontlie.database.model.team.Team;
 import com.lasterbergamot.balldontlie.domain.game.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

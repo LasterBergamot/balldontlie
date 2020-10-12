@@ -3,8 +3,8 @@ type Player {
     firstName: String!,
     lastName: String!,
     position: String!,
-    heightFeet: Int!,
-    heightInches: Int!,
+    heightFeet: Int,
+    heightInches: Int,
     weight: Weight!
     team: Team!,
     games: [Game]!,

@@ -18,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 @Table(name = "player")
@@ -73,6 +74,14 @@ public class Player {
     }
 
     public Weight getWeight() {
-        return Weight.restore(weightPounds);
+        return Weight.restore(Optional.ofNullable(weightPounds).orElse(0));
+    }
+
+    public Integer getHeightFeet() {
+        return Optional.ofNullable(heightFeet).orElse(0);
+    }
+
+    public Integer getHeightInches() {
+        return Optional.ofNullable(heightInches).orElse(0);
     }
 }
