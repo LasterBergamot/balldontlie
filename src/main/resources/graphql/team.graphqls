@@ -6,7 +6,7 @@ type Team {
     division: Division!,
     fullName: String!,
     name: String!,
-    players: [Player!]!
+    players: [Player]!
 }
 
 type Query {

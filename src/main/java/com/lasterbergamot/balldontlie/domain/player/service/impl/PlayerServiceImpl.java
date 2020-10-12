@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -130,12 +131,21 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
     }
 
     @Override
-    public List<Player> getPlayers(final Optional<Integer> count) {
+    public List<Player> getPlayers(final Optional<Integer> count, final Optional<Integer> minimumFeet, final Optional<Integer> minimumInches, final Optional<Integer> minimumWeight) {
         return playerRepository
                 .findAll()
                 .stream()
+                .filter(getAttributesPredicate(minimumFeet, minimumInches, minimumWeight))
                 .limit(count.orElse(Integer.MAX_VALUE))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    private Predicate<Player> getAttributesPredicate(final Optional<Integer> minimumFeet, final Optional<Integer> minimumInches, final Optional<Integer> minimumWeight) {
+        Predicate<Player> feetPredicate = minimumFeet.isEmpty() ? player -> true : player -> player.getHeightFeet() >= minimumFeet.get();
+        Predicate<Player> inchesPredicate = minimumInches.isEmpty() ? player -> true : player -> player.getHeightInches() >= minimumInches.get();
+        Predicate<Player> weightPredicate = minimumWeight.isEmpty() ? player -> true : player -> player.getWeightPounds() >= minimumWeight.get();
+
+        return feetPredicate.and(inchesPredicate).and(weightPredicate);
     }
 
     @Override
