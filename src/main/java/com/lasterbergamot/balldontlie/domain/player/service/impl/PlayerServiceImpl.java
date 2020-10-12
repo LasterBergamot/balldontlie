@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -141,11 +142,15 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
     }
 
     private Predicate<Player> getAttributesPredicate(final Optional<Integer> minimumFeet, final Optional<Integer> minimumInches, final Optional<Integer> minimumWeight) {
-        Predicate<Player> feetPredicate = minimumFeet.isEmpty() ? player -> true : player -> player.getHeightFeet() >= minimumFeet.get();
-        Predicate<Player> inchesPredicate = minimumInches.isEmpty() ? player -> true : player -> player.getHeightInches() >= minimumInches.get();
-        Predicate<Player> weightPredicate = minimumWeight.isEmpty() ? player -> true : player -> player.getWeightPounds() >= minimumWeight.get();
+        Predicate<Player> feetPredicate = createPredicateFromQueryParameter(minimumFeet, Player::getHeightFeet);
+        Predicate<Player> inchesPredicate = createPredicateFromQueryParameter(minimumInches, Player::getHeightInches);
+        Predicate<Player> weightPredicate = createPredicateFromQueryParameter(minimumWeight, Player::getWeightPounds);
 
         return feetPredicate.and(inchesPredicate).and(weightPredicate);
+    }
+
+    private Predicate<Player> createPredicateFromQueryParameter(final Optional<Integer> queryParameter, Function<Player, Integer> playerAttributeFunction) {
+        return queryParameter.isEmpty() ? player -> true : player -> playerAttributeFunction.apply(player) >= queryParameter.get();
     }
 
     @Override
