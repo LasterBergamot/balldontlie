@@ -73,19 +73,7 @@ public class Player {
         return Objects.hash(id);
     }
 
-    public Integer getWeightPounds() {
-        return Optional.ofNullable(weightPounds).orElse(0);
-    }
-
     public Weight getWeight() {
         return Weight.restore(Optional.ofNullable(weightPounds).orElse(0));
-    }
-
-    public Integer getHeightFeet() {
-        return Optional.ofNullable(heightFeet).orElse(0);
-    }
-
-    public Integer getHeightInches() {
-        return Optional.ofNullable(heightInches).orElse(0);
     }
 }

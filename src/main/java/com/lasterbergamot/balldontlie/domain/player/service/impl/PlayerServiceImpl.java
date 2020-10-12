@@ -149,8 +149,10 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
         return feetPredicate.and(inchesPredicate).and(weightPredicate);
     }
 
-    private Predicate<Player> createPredicateFromQueryParameter(final Optional<Integer> queryParameter, Function<Player, Integer> playerAttributeFunction) {
-        return queryParameter.isEmpty() ? player -> true : player -> playerAttributeFunction.apply(player) >= queryParameter.get();
+    private Predicate<Player> createPredicateFromQueryParameter(final Optional<Integer> queryParameter, final Function<Player, Integer> attributeFunction) {
+        return queryParameter.isEmpty()
+                ? player -> true
+                : player -> Optional.ofNullable(attributeFunction.apply(player)).orElse(0) >= queryParameter.get();
     }
 
     @Override
