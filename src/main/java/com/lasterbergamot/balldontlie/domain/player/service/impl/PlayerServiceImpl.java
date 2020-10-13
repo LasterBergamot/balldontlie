@@ -134,13 +134,6 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
         return playersFromAPI;
     }
 
-    //TODO:
-    // Create Height class: with feet and inches. Create compareTo() method (similar behaviour as e.g. Integer.compareTo()).
-    // Create static Height.convert(feet, inches) method.
-    // Make sure that the feet value can exist without the inches value, but not vice versa. If feet is absent while inches exists throw an exception.
-    // Validate feet to fall in the following interval: [4, 8], if not throw an exception
-    // Validate inches to fall in the following interval: [0, 11], if not throw and exception
-    // Validate weight to fall in the following interval: [150, 400], if not throw and exception
     @Override
     public List<Player> getPlayers(final Optional<Integer> count, final Optional<Integer> minimumFeet, final Optional<Integer> minimumInches, final Optional<Integer> minimumWeight) {
         validateQueryParameters(minimumFeet, minimumInches, minimumWeight);
@@ -180,15 +173,13 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
         Predicate<Player> heightPredicate = player -> true;
         Height height = Height.convert(minimumFeet.orElse(0), minimumInches.orElse(0));
 
-        if (minimumFeet.isPresent() && minimumInches.isPresent()) {
+        if (minimumFeet.isPresent()) {
             heightPredicate = player -> {
                 Integer feet = Optional.ofNullable(player.getHeightFeet()).orElse(0);
                 Integer inches = Optional.ofNullable(player.getHeightInches()).orElse(0);
 
                 return height.compareTo(Height.convert(feet, inches)) <= 0;
             };
-        } else if (minimumFeet.isPresent()) {
-            heightPredicate = createPredicateFromQueryParameter(minimumFeet, Player::getHeightFeet);;
         }
 
         return heightPredicate;
