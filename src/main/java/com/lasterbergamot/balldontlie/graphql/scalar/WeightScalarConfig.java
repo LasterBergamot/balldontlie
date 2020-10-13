@@ -8,12 +8,16 @@ import graphql.schema.GraphQLScalarType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static com.lasterbergamot.balldontlie.util.Constants.ERR_MSG_THIS_SHOULD_NOT_BE_PARSED;
+import static com.lasterbergamot.balldontlie.util.Constants.SCALAR_TYPE_DESCRIPTION_DESCRIBES_WEIGHT;
+import static com.lasterbergamot.balldontlie.util.Constants.SCALAR_TYPE_NAME_WEIGHT;
+
 @Configuration
 public class WeightScalarConfig {
 
     @Bean
     public GraphQLScalarType weightScalar() {
-        return new GraphQLScalarType("Weight", "Describes weight", new Coercing<Weight, String>() {
+        return new GraphQLScalarType(SCALAR_TYPE_NAME_WEIGHT, SCALAR_TYPE_DESCRIPTION_DESCRIBES_WEIGHT, new Coercing<Weight, String>() {
             @Override
             public String serialize(Object dataFetcherResult) throws CoercingSerializeException {
                 try {
@@ -25,12 +29,12 @@ public class WeightScalarConfig {
 
             @Override
             public Weight parseValue(Object input) throws CoercingParseValueException {
-                throw new CoercingParseValueException("This should not be parsed");
+                throw new CoercingParseValueException(ERR_MSG_THIS_SHOULD_NOT_BE_PARSED);
             }
 
             @Override
             public Weight parseLiteral(Object input) throws CoercingParseLiteralException {
-                throw new CoercingParseValueException("This should not be parsed");
+                throw new CoercingParseValueException(ERR_MSG_THIS_SHOULD_NOT_BE_PARSED);
             }
         });
     }

@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
 @Component
 public class TeamTransformer {
 
-    public List<Team> transformTeamDTOListToTeamList(List<TeamDTO> teamDTOList) {
+    public List<Team> transformTeamDTOListToTeamList(final List<TeamDTO> teamDTOList) {
         return teamDTOList
                 .stream()
                 .map(this::transformTeamDTOToTeam)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public Team transformTeamDTOToTeam(TeamDTO teamDTO) {
+    public Team transformTeamDTOToTeam(final TeamDTO teamDTO) {
         return Team.builder()
                 .id(teamDTO.getId())
                 .abbreviation(teamDTO.getAbbreviation())

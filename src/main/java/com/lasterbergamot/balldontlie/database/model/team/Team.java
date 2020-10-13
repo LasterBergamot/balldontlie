@@ -18,8 +18,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Objects;
 
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_FULL_NAME;
+import static com.lasterbergamot.balldontlie.util.Constants.TABLE_TEAM;
+
 @Entity
-@Table(name = "team")
+@Table(name = TABLE_TEAM)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -47,7 +50,7 @@ public class Team {
     private Division division;
 
     @NonNull
-    @Column(name = "full_name")
+    @Column(name = COLUMN_FULL_NAME)
     private String fullName;
 
     @NonNull

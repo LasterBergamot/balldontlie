@@ -18,11 +18,11 @@ public class PlayerResolver implements GraphQLResolver<Player> {
     private final GameService gameService;
     private final StatsService statsService;
 
-    public List<Game> getGames(Player player) {
+    public List<Game> getGames(final Player player) {
         return gameService.getGames(player);
     }
 
-    public List<Stats> getStats(Player player) {
+    public List<Stats> getStats(final Player player) {
         return statsService.getAllStats(player);
     }
 }

@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import static com.lasterbergamot.balldontlie.util.Constants.QUERY_SEQ_GAME_ID_NEXTVAL;
+
 @Repository
 public interface GameRepository extends JpaRepository<Game, Integer> {
-    @Query(value = "SELECT nextval('seq_game_id')", nativeQuery = true)
+    @Query(value = QUERY_SEQ_GAME_ID_NEXTVAL, nativeQuery = true)
     Integer getNextId();
 }

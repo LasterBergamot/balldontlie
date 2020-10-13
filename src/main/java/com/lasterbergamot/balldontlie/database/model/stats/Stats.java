@@ -19,9 +19,26 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Objects;
 
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_DEFENSIVE_REBOUNDS;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_FIELD_GOALS_ATTEMPTED;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_FIELD_GOALS_MADE;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_FIELD_GOAL_PERCENTAGE;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_FREE_THROWS_ATTEMPTED;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_FREE_THROWS_MADE;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_FREE_THROW_PERCENTAGE;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_OFFENSIVE_REBOUNDS;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_PERSONAL_FOULS;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_THREE_POINTERS_ATTEMPTED;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_THREE_POINTERS_MADE;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_THREE_POINTER_PERCENTAGE;
+import static com.lasterbergamot.balldontlie.util.Constants.JOIN_COLUMN_GAME_ID;
+import static com.lasterbergamot.balldontlie.util.Constants.JOIN_COLUMN_PLAYER_ID;
+import static com.lasterbergamot.balldontlie.util.Constants.JOIN_COLUMN_TEAM_ID;
+import static com.lasterbergamot.balldontlie.util.Constants.TABLE_STATS;
+
 
 @Entity
-@Table(name = "stats")
+@Table(name = TABLE_STATS)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -35,15 +52,15 @@ public class Stats {
     private Integer id;
 
     @OneToOne
-    @JoinColumn(name = "player_id")
+    @JoinColumn(name = JOIN_COLUMN_PLAYER_ID)
     private Player player;
 
     @OneToOne
-    @JoinColumn(name = "team_id")
+    @JoinColumn(name = JOIN_COLUMN_TEAM_ID)
     private Team team;
 
     @OneToOne
-    @JoinColumn(name = "game_id")
+    @JoinColumn(name = JOIN_COLUMN_GAME_ID)
     private Game game;
 
     private String minutes;
@@ -54,10 +71,10 @@ public class Stats {
 
     private Integer rebounds;
 
-    @Column(name = "defensive_rebounds")
+    @Column(name = COLUMN_DEFENSIVE_REBOUNDS)
     private Integer defensiveRebounds;
 
-    @Column(name = "offensive_rebounds")
+    @Column(name = COLUMN_OFFENSIVE_REBOUNDS)
     private Integer offensiveRebounds;
 
     private Integer blocks;
@@ -66,34 +83,34 @@ public class Stats {
 
     private Integer turnovers;
 
-    @Column(name = "personal_fouls")
+    @Column(name = COLUMN_PERSONAL_FOULS)
     private Integer personalFouls;
 
-    @Column(name = "field_goals_attempted")
+    @Column(name = COLUMN_FIELD_GOALS_ATTEMPTED)
     private Integer fieldGoalsAttempted;
 
-    @Column(name = "field_goals_made")
+    @Column(name = COLUMN_FIELD_GOALS_MADE)
     private Integer fieldGoalsMade;
 
-    @Column(name = "field_goal_percentage")
+    @Column(name = COLUMN_FIELD_GOAL_PERCENTAGE)
     private Double fieldGoalPercentage;
 
-    @Column(name = "three_pointers_attempted")
+    @Column(name = COLUMN_THREE_POINTERS_ATTEMPTED)
     private Integer threePointersAttempted;
 
-    @Column(name = "three_pointers_made")
+    @Column(name = COLUMN_THREE_POINTERS_MADE)
     private Integer threePointersMade;
 
-    @Column(name = "three_pointer_percentage")
+    @Column(name = COLUMN_THREE_POINTER_PERCENTAGE)
     private Double threePointerPercentage;
 
-    @Column(name = "free_throws_attempted")
+    @Column(name = COLUMN_FREE_THROWS_ATTEMPTED)
     private Integer freeThrowsAttempted;
 
-    @Column(name = "free_throws_made")
+    @Column(name = COLUMN_FREE_THROWS_MADE)
     private Integer freeThrowsMade;
 
-    @Column(name = "free_throw_percentage")
+    @Column(name = COLUMN_FREE_THROW_PERCENTAGE)
     private Double freeThrowPercentage;
 
     @Override

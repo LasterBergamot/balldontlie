@@ -28,6 +28,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import static com.lasterbergamot.balldontlie.util.Constants.ERR_MSG_THE_GAME_DTOWRAPPER_GOT_FROM_THE_API_WAS_NULL;
+import static com.lasterbergamot.balldontlie.util.Constants.ERR_MSG_THE_GIVEN_HOME_TEAM_DOES_NOT_EXIST_IN_THE_DATABASE;
+import static com.lasterbergamot.balldontlie.util.Constants.ERR_MSG_THE_GIVEN_VISITOR_TEAM_DOES_NOT_EXIST_IN_THE_DATABASE;
+import static com.lasterbergamot.balldontlie.util.Constants.KEY_HOME_TEAM;
+import static com.lasterbergamot.balldontlie.util.Constants.KEY_VISITOR_TEAM;
+import static com.lasterbergamot.balldontlie.util.Constants.URL_GAME_BALLDONTLIE_API_PER_PAGE_100_PAGE;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -41,14 +48,14 @@ public class GameServiceImpl implements GameService, DataImporter {
     @Override
     public void getAllGamesFromBalldontlieAPI() {
         GameDTOWrapper gameDTOWrapper = restTemplate
-                .getForObject(String.format("https://www.balldontlie.io/api/v1/games?per_page=100&page=%d", 1), GameDTOWrapper.class);
+                .getForObject(String.format(URL_GAME_BALLDONTLIE_API_PER_PAGE_100_PAGE, 1), GameDTOWrapper.class);
 
         Optional.ofNullable(gameDTOWrapper)
-                .ifPresentOrElse(this::handlePossibleNewGames, () -> log.error("The GameDTOWrapper got from the API was null!"));
+                .ifPresentOrElse(this::handlePossibleNewGames, () -> log.error(ERR_MSG_THE_GAME_DTOWRAPPER_GOT_FROM_THE_API_WAS_NULL));
     }
 
     @Override
-    public List<Game> getGames(Player player) {
+    public List<Game> getGames(final Player player) {
         Team playerTeam = player.getTeam();
 
         if (playerTeam == null) {
@@ -86,28 +93,28 @@ public class GameServiceImpl implements GameService, DataImporter {
     }
 
     @Override
-    public Game createGame(String date,
-                           Integer homeTeamScore, Integer visitorTeamScore,
-                           Integer season, Integer period,
-                           String status, String time,
-                           Boolean postseason, Integer homeTeamId,
-                           Integer visitorTeamId) {
+    public Game createGame(final String date,
+                           final Integer homeTeamScore, final Integer visitorTeamScore,
+                           final Integer season, final Integer period,
+                           final String status, final String time,
+                           final Boolean postseason, final Integer homeTeamId,
+                           final Integer visitorTeamId) {
         Map<String, Team> validationResults = validateMutationInputs(homeTeamId, visitorTeamId);
 
         Game game = createGameFromMutationInputs(gameRepository.getNextId(), date, homeTeamScore, visitorTeamScore, season, period, status, time, postseason,
-                validationResults.get("homeTeam"), validationResults.get("visitorTeam"));
+                validationResults.get(KEY_HOME_TEAM), validationResults.get(KEY_VISITOR_TEAM));
 
         return gameRepository.save(game);
     }
 
-    private Map<String, Team> validateMutationInputs(Integer homeTeamId, Integer visitorTeamId) {
-        Team homeTeam = checkAbsence(teamService.getTeam(homeTeamId), "The given home team does not exist in the database!");
-        Team visitorTeam = checkAbsence(teamService.getTeam(visitorTeamId), "The given visitor team does not exist in the database!");
+    private Map<String, Team> validateMutationInputs(final Integer homeTeamId, final Integer visitorTeamId) {
+        Team homeTeam = checkAbsence(teamService.getTeam(homeTeamId), ERR_MSG_THE_GIVEN_HOME_TEAM_DOES_NOT_EXIST_IN_THE_DATABASE);
+        Team visitorTeam = checkAbsence(teamService.getTeam(visitorTeamId), ERR_MSG_THE_GIVEN_VISITOR_TEAM_DOES_NOT_EXIST_IN_THE_DATABASE);
 
-        return Map.of("homeTeam", homeTeam, "visitorTeam", visitorTeam);
+        return Map.of(KEY_HOME_TEAM, homeTeam, KEY_VISITOR_TEAM, visitorTeam);
     }
 
-    private Team checkAbsence(Optional<Team> inputToValidate, String errorMessage) {
+    private Team checkAbsence(final Optional<Team> inputToValidate, final String errorMessage) {
         return inputToValidate.orElseThrow(() -> new GameMutationException(errorMessage));
     }
 
@@ -132,7 +139,7 @@ public class GameServiceImpl implements GameService, DataImporter {
                 .build();
     }
 
-    private void handlePossibleNewGames(GameDTOWrapper gameDTOWrapper) {
+    private void handlePossibleNewGames(final GameDTOWrapper gameDTOWrapper) {
         List<Game> currentlySavedGames = gameRepository.findAll();
         Meta meta = gameDTOWrapper.getMeta();
 
@@ -162,14 +169,14 @@ public class GameServiceImpl implements GameService, DataImporter {
         getAllGamesFromBalldontlieAPI();
     }
 
-    private List<CompletableFuture<GameDTOWrapper>> createCompletableFuturesFromTheAPICalls(int totalPages) {
+    private List<CompletableFuture<GameDTOWrapper>> createCompletableFuturesFromTheAPICalls(final int totalPages) {
         List<CompletableFuture<GameDTOWrapper>> completableFutureList = new ArrayList<>();
 
         for (int currentPage = 2; currentPage <= totalPages; currentPage++) {
             int finalCurrentPage = currentPage;
             CompletableFuture<GameDTOWrapper> completableFuture = CompletableFuture.supplyAsync(
                     () -> restTemplate
-                            .getForObject(String.format("https://www.balldontlie.io/api/v1/games?per_page=100&page=%d", finalCurrentPage), GameDTOWrapper.class)
+                            .getForObject(String.format(URL_GAME_BALLDONTLIE_API_PER_PAGE_100_PAGE, finalCurrentPage), GameDTOWrapper.class)
             );
 
             completableFutureList.add(completableFuture);
@@ -178,7 +185,7 @@ public class GameServiceImpl implements GameService, DataImporter {
         return completableFutureList;
     }
 
-    private CompletableFuture<List<GameDTOWrapper>> collectReturnValuesFromAllThreads(List<CompletableFuture<GameDTOWrapper>> completableFutureList) {
+    private CompletableFuture<List<GameDTOWrapper>> collectReturnValuesFromAllThreads(final List<CompletableFuture<GameDTOWrapper>> completableFutureList) {
         return waitForThreadCompletion(completableFutureList).thenApply(
                 future -> completableFutureList
                             .stream()
@@ -187,11 +194,11 @@ public class GameServiceImpl implements GameService, DataImporter {
         );
     }
 
-    private CompletableFuture<Void> waitForThreadCompletion(List<CompletableFuture<GameDTOWrapper>> completableFutureList) {
+    private CompletableFuture<Void> waitForThreadCompletion(final List<CompletableFuture<GameDTOWrapper>> completableFutureList) {
         return CompletableFuture.allOf(completableFutureList.toArray(new CompletableFuture[0]));
     }
 
-    private List<Game> getGamesFromAPI(GameDTOWrapper gameDTOWrapper, CompletableFuture<List<GameDTOWrapper>> allCompletableFuture) {
+    private List<Game> getGamesFromAPI(final GameDTOWrapper gameDTOWrapper, final CompletableFuture<List<GameDTOWrapper>> allCompletableFuture) {
         List<Game> gamesFromAPI = new ArrayList<>();
 
         try {

@@ -21,6 +21,10 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static com.lasterbergamot.balldontlie.util.Constants.ERR_MSG_THE_GIVEN_DIVISION_IS_NOT_PART_OF_THE_GIVEN_CONFERENCE;
+import static com.lasterbergamot.balldontlie.util.Constants.ERR_MSG_THE_TEAM_DTOWRAPPER_OBJECT_GOT_FROM_THE_API_WAS_NULL;
+import static com.lasterbergamot.balldontlie.util.Constants.URL_TEAM_BALLDONTLIE_API_PER_PAGE_100;
+
 @Service
 @Slf4j
 @AllArgsConstructor
@@ -32,10 +36,10 @@ public class TeamServiceImpl implements TeamService, DataImporter {
 
     @Override
     public void getAllTeamsFromBalldontlieAPI() {
-        TeamDTOWrapper teamDTOWrapper = restTemplate.getForObject("https://www.balldontlie.io/api/v1/teams?per_page=100", TeamDTOWrapper.class);
+        TeamDTOWrapper teamDTOWrapper = restTemplate.getForObject(URL_TEAM_BALLDONTLIE_API_PER_PAGE_100, TeamDTOWrapper.class);
 
         Optional.ofNullable(teamDTOWrapper)
-                .ifPresentOrElse(this::handlePossibleNewTeams, () -> log.error("The TeamDTOWrapper object got from the API was null!"));
+                .ifPresentOrElse(this::handlePossibleNewTeams, () -> log.error(ERR_MSG_THE_TEAM_DTOWRAPPER_OBJECT_GOT_FROM_THE_API_WAS_NULL));
     }
 
     @Override
@@ -49,7 +53,7 @@ public class TeamServiceImpl implements TeamService, DataImporter {
     private Predicate<Team> getTeamPredicateAccordingToConferenceAndDivision(final Conference conference, final Division division) throws TeamQueryException {
 
         if (division != null && !division.getConference().equals(conference)) {
-            throw new TeamQueryException("The given division is not part of the given conference!");
+            throw new TeamQueryException(ERR_MSG_THE_GIVEN_DIVISION_IS_NOT_PART_OF_THE_GIVEN_CONFERENCE);
         }
 
         Predicate<Team> divisionPredicate = division == null ? team -> true : team -> team.getDivision().equals(division);
@@ -58,7 +62,7 @@ public class TeamServiceImpl implements TeamService, DataImporter {
         return divisionPredicate.and(conferencePredicate);
     }
 
-    private List<Team> handleCount(final Optional<Integer> count, final List<Team> teams, Predicate<Team> teamPredicate) {
+    private List<Team> handleCount(final Optional<Integer> count, final List<Team> teams, final Predicate<Team> teamPredicate) {
         return teams
                 .stream()
                 .filter(teamPredicate)
@@ -76,7 +80,7 @@ public class TeamServiceImpl implements TeamService, DataImporter {
         getAllTeamsFromBalldontlieAPI();
     }
 
-    private void handlePossibleNewTeams(TeamDTOWrapper teamDTOWrapper) {
+    private void handlePossibleNewTeams(final TeamDTOWrapper teamDTOWrapper) {
         List<Team> currentlyStoredTeams = teamRepository.findAll();
 
         log.info("Checking for possible new teams!");

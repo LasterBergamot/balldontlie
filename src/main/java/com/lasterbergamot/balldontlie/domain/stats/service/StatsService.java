@@ -10,6 +10,6 @@ public interface StatsService {
     void getAllStatsFromBalldontlieAPI();
 
     List<Stats> getAllStats(final Optional<Integer> count);
-    List<Stats> getAllStats(Player player);
+    List<Stats> getAllStats(final Player player);
     Optional<Stats> getStats(final int id);
 }

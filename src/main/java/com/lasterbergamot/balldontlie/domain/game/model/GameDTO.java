@@ -9,6 +9,18 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_DATE;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_HOME_TEAM;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_HOME_TEAM_SCORE;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_ID;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_PERIOD;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_POSTSEASON;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_SEASON;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_STATUS;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_TIME;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_VISITOR_TEAM;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_VISITOR_TEAM_SCORE;
+
 @NoArgsConstructor
 @Getter
 @ToString
@@ -27,12 +39,12 @@ public class GameDTO {
     private TeamDTO visitorTeam;
 
     @JsonCreator
-    public GameDTO(@JsonProperty("id") Integer id, @JsonProperty("date") LocalDate date,
-                   @JsonProperty("home_team_score") Integer homeTeamScore, @JsonProperty("visitor_team_score") Integer visitorTeamScore,
-                   @JsonProperty("season") Integer season, @JsonProperty("period") Integer period,
-                   @JsonProperty("status") String status, @JsonProperty("time") String time,
-                   @JsonProperty("postseason") Boolean postseason, @JsonProperty("home_team") TeamDTO homeTeam,
-                   @JsonProperty("visitor_team") TeamDTO visitorTeam) {
+    public GameDTO(@JsonProperty(JSON_PROPERTY_ID) Integer id, @JsonProperty(JSON_PROPERTY_DATE) LocalDate date,
+                   @JsonProperty(JSON_PROPERTY_HOME_TEAM_SCORE) Integer homeTeamScore, @JsonProperty(JSON_PROPERTY_VISITOR_TEAM_SCORE) Integer visitorTeamScore,
+                   @JsonProperty(JSON_PROPERTY_SEASON) Integer season, @JsonProperty(JSON_PROPERTY_PERIOD) Integer period,
+                   @JsonProperty(JSON_PROPERTY_STATUS) String status, @JsonProperty(JSON_PROPERTY_TIME) String time,
+                   @JsonProperty(JSON_PROPERTY_POSTSEASON) Boolean postseason, @JsonProperty(JSON_PROPERTY_HOME_TEAM) TeamDTO homeTeam,
+                   @JsonProperty(JSON_PROPERTY_VISITOR_TEAM) TeamDTO visitorTeam) {
         this.id = id;
         this.date = date;
         this.homeTeamScore = homeTeamScore;

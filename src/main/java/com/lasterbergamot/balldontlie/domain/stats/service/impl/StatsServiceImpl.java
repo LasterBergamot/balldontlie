@@ -26,6 +26,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+import static com.lasterbergamot.balldontlie.util.Constants.ERR_MSG_THE_STATS_DTOWRAPPER_OBJECT_GOT_FROM_THE_API_WAS_NULL;
+import static com.lasterbergamot.balldontlie.util.Constants.URL_STATS_BALLDONTLIE_API_PER_PAGE_100_PAGE;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -39,10 +42,10 @@ public class StatsServiceImpl implements StatsService, DataImporter {
     @Override
     public void getAllStatsFromBalldontlieAPI() {
         StatsDTOWrapper statsDTOWrapper = restTemplate
-                .getForObject(String.format("https://www.balldontlie.io/api/v1/stats?per_page=100&page=%d", 1), StatsDTOWrapper.class);
+                .getForObject(String.format(URL_STATS_BALLDONTLIE_API_PER_PAGE_100_PAGE, 1), StatsDTOWrapper.class);
 
         Optional.ofNullable(statsDTOWrapper)
-                .ifPresentOrElse(this::handlePossibleNewStats, () -> log.error("The StatsDTOWrapper object got from the API was null!"));
+                .ifPresentOrElse(this::handlePossibleNewStats, () -> log.error(ERR_MSG_THE_STATS_DTOWRAPPER_OBJECT_GOT_FROM_THE_API_WAS_NULL));
     }
 
     @Override
@@ -55,7 +58,7 @@ public class StatsServiceImpl implements StatsService, DataImporter {
     }
 
     @Override
-    public List<Stats> getAllStats(Player player) {
+    public List<Stats> getAllStats(final Player player) {
         return statsRepository.findAllByPlayer(player);
     }
 
@@ -64,7 +67,7 @@ public class StatsServiceImpl implements StatsService, DataImporter {
         return statsRepository.findById(id);
     }
 
-    private void handlePossibleNewStats(StatsDTOWrapper statsDTOWrapper) {
+    private void handlePossibleNewStats(final StatsDTOWrapper statsDTOWrapper) {
         List<Stats> currentlySavedStats = statsRepository.findAll();
         Meta meta = statsDTOWrapper.getMeta();
 
@@ -96,7 +99,7 @@ public class StatsServiceImpl implements StatsService, DataImporter {
         getAllStatsFromBalldontlieAPI();
     }
 
-    private void handlePossibleNonStoredGames(Set<Stats> statsToSave) {
+    private void handlePossibleNonStoredGames(final Set<Stats> statsToSave) {
         for (Iterator<Stats> statsIterator = statsToSave.iterator(); statsIterator.hasNext();) {
             Stats stats = statsIterator.next();
             Game game = stats.getGame();
@@ -108,7 +111,7 @@ public class StatsServiceImpl implements StatsService, DataImporter {
         }
     }
 
-    private List<CompletableFuture<StatsDTOWrapper>> createCompletableFuturesFromTheAPICalls(Integer totalPages) {
+    private List<CompletableFuture<StatsDTOWrapper>> createCompletableFuturesFromTheAPICalls(final Integer totalPages) {
         List<CompletableFuture<StatsDTOWrapper>> completableFutureList = new ArrayList<>();
         int maxNumberOfRequests = Math.min(totalPages, 13);
 
@@ -121,7 +124,7 @@ public class StatsServiceImpl implements StatsService, DataImporter {
             int finalCurrentPage = currentPage;
             CompletableFuture<StatsDTOWrapper> completableFuture = CompletableFuture.supplyAsync(
                     () -> restTemplate
-                            .getForObject(String.format("https://www.balldontlie.io/api/v1/stats?per_page=100&page=%d", finalCurrentPage),
+                            .getForObject(String.format(URL_STATS_BALLDONTLIE_API_PER_PAGE_100_PAGE, finalCurrentPage),
                                     StatsDTOWrapper.class)
             );
 
@@ -131,7 +134,7 @@ public class StatsServiceImpl implements StatsService, DataImporter {
         return completableFutureList;
     }
 
-    private CompletableFuture<List<StatsDTOWrapper>> collectReturnValuesFromAllThreads(List<CompletableFuture<StatsDTOWrapper>> completableFutureList) {
+    private CompletableFuture<List<StatsDTOWrapper>> collectReturnValuesFromAllThreads(final List<CompletableFuture<StatsDTOWrapper>> completableFutureList) {
         return waitForThreadCompletion(completableFutureList).thenApply(
                 future -> completableFutureList
                         .stream()
@@ -140,11 +143,11 @@ public class StatsServiceImpl implements StatsService, DataImporter {
         );
     }
 
-    private CompletableFuture<Void> waitForThreadCompletion(List<CompletableFuture<StatsDTOWrapper>> completableFutureList) {
+    private CompletableFuture<Void> waitForThreadCompletion(final List<CompletableFuture<StatsDTOWrapper>> completableFutureList) {
         return CompletableFuture.allOf(completableFutureList.toArray(new CompletableFuture[0]));
     }
 
-    private List<Stats> getPlayersFromAPI(StatsDTOWrapper statsDTOWrapper, CompletableFuture<List<StatsDTOWrapper>> allCompletableFuture) {
+    private List<Stats> getPlayersFromAPI(final StatsDTOWrapper statsDTOWrapper, final CompletableFuture<List<StatsDTOWrapper>> allCompletableFuture) {
         List<Stats> playersFromAPI = new ArrayList<>();
 
         try {

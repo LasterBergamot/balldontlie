@@ -15,13 +15,13 @@ public class GameTransformer {
 
     private final TeamTransformer teamTransformer;
 
-    public List<Game> transformGameDTOListToGameList(List<GameDTO> gameDTOList) {
+    public List<Game> transformGameDTOListToGameList(final List<GameDTO> gameDTOList) {
         return gameDTOList.stream()
                 .map(this::transformGameDTOToGame)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private Game transformGameDTOToGame(GameDTO gameDTO) {
+    private Game transformGameDTOToGame(final GameDTO gameDTO) {
         return Game.builder()
                 .id(gameDTO.getId())
                 .date(gameDTO.getDate())

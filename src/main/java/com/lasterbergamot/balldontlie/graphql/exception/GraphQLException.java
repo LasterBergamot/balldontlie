@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.lasterbergamot.balldontlie.util.Constants.KEY_ERROR_MESSAGE;
+
 public class GraphQLException extends RuntimeException implements GraphQLError {
 
-    public GraphQLException(String message) {
+    public GraphQLException(final String message) {
         super(message);
     }
 
@@ -26,6 +28,6 @@ public class GraphQLException extends RuntimeException implements GraphQLError {
 
     @Override
     public Map<String, Object> getExtensions() {
-        return Map.of("errorMessage", getMessage());
+        return Map.of(KEY_ERROR_MESSAGE, getMessage());
     }
 }

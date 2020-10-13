@@ -20,11 +20,11 @@ public class Height {
     @NonNull
     private final Integer inches;
 
-    public static Height convert(Integer feet, Integer inches) {
+    public static Height convert(final Integer feet, final Integer inches) {
         return new Height(feet, inches);
     }
 
-    public Integer compareTo(Height otherHeight) {
+    public Integer compareTo(final Height otherHeight) {
         return HEIGHT_COMPARATOR.compare(this, otherHeight);
     }
 }
