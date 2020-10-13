@@ -7,6 +7,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_FIRST_NAME;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_HEIGHT_FEET;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_HEIGHT_INCHES;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_ID;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_LAST_NAME;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_POSITION;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_TEAM;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_WEIGHT_POUNDS;
+
 @NoArgsConstructor
 @Getter
 @ToString
@@ -22,10 +31,10 @@ public class PlayerDTO {
     private TeamDTO team;
 
     @JsonCreator
-    public PlayerDTO(@JsonProperty("id") Integer id, @JsonProperty("first_name") String firstName,
-                     @JsonProperty("last_name") String lastName, @JsonProperty("position") String position,
-                     @JsonProperty("height_feet") Integer heightFeet, @JsonProperty("height_inches") Integer heightInches,
-                     @JsonProperty("weight_pounds") Integer weightPounds, @JsonProperty("team") TeamDTO team) {
+    public PlayerDTO(@JsonProperty(JSON_PROPERTY_ID) Integer id, @JsonProperty(JSON_PROPERTY_FIRST_NAME) String firstName,
+                     @JsonProperty(JSON_PROPERTY_LAST_NAME) String lastName, @JsonProperty(JSON_PROPERTY_POSITION) String position,
+                     @JsonProperty(JSON_PROPERTY_HEIGHT_FEET) Integer heightFeet, @JsonProperty(JSON_PROPERTY_HEIGHT_INCHES) Integer heightInches,
+                     @JsonProperty(JSON_PROPERTY_WEIGHT_POUNDS) Integer weightPounds, @JsonProperty(JSON_PROPERTY_TEAM) TeamDTO team) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

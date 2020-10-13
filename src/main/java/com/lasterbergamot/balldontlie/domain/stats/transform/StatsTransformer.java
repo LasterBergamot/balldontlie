@@ -10,14 +10,14 @@ import java.util.stream.Collectors;
 @Component
 public class StatsTransformer {
 
-    public List<Stats> transformStatsDTOListToStatsList(List<StatsDTO> statsDTOList) {
+    public List<Stats> transformStatsDTOListToStatsList(final List<StatsDTO> statsDTOList) {
         return statsDTOList
                 .stream()
                 .map(this::transformStatsDTOToStats)
                 .collect(Collectors.toList());
     }
 
-    private Stats transformStatsDTOToStats(StatsDTO statsDTO) {
+    private Stats transformStatsDTOToStats(final StatsDTO statsDTO) {
         return Stats.builder()
                 .assists(statsDTO.getAssists())
                 .blocks(statsDTO.getBlocks())

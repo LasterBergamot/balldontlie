@@ -19,8 +19,16 @@ import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_DATE_OF_MATCH;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_HOME_TEAM_SCORE;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_TIME_TILL_START;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_VISITOR_TEAM_SCORE;
+import static com.lasterbergamot.balldontlie.util.Constants.JOIN_COLUMN_HOME_TEAM_ID;
+import static com.lasterbergamot.balldontlie.util.Constants.JOIN_COLUMN_VISITOR_TEAM_ID;
+import static com.lasterbergamot.balldontlie.util.Constants.TABLE_GAME;
+
 @Entity
-@Table(name = "game")
+@Table(name = TABLE_GAME)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -34,15 +42,15 @@ public class Game {
     private Integer id;
 
     @NonNull
-    @Column(name = "date_of_match")
+    @Column(name = COLUMN_DATE_OF_MATCH)
     private LocalDate date;
 
     @NonNull
-    @Column(name = "home_team_score")
+    @Column(name = COLUMN_HOME_TEAM_SCORE)
     private Integer homeTeamScore;
 
     @NonNull
-    @Column(name = "visitor_team_score")
+    @Column(name = COLUMN_VISITOR_TEAM_SCORE)
     private Integer visitorTeamScore;
 
     @NonNull
@@ -55,7 +63,7 @@ public class Game {
     private String status;
 
     @NonNull
-    @Column(name = "time_till_start")
+    @Column(name = COLUMN_TIME_TILL_START)
     private String time;
 
     @NonNull
@@ -63,12 +71,12 @@ public class Game {
 
     @NonNull
     @OneToOne
-    @JoinColumn(name = "home_team_id")
+    @JoinColumn(name = JOIN_COLUMN_HOME_TEAM_ID)
     private Team homeTeam;
 
     @NonNull
     @OneToOne
-    @JoinColumn(name = "visitor_team_id")
+    @JoinColumn(name = JOIN_COLUMN_VISITOR_TEAM_ID)
     private Team visitorTeam;
 
     @Override

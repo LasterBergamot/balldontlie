@@ -15,14 +15,14 @@ public class PlayerTransformer {
 
     private final TeamTransformer teamTransformer;
 
-    public List<Player> transformPlayerDTOListToPlayerList(List<PlayerDTO> playerDTOS) {
+    public List<Player> transformPlayerDTOListToPlayerList(final List<PlayerDTO> playerDTOS) {
         return playerDTOS
                 .stream()
                 .map(this::transformPlayerDTOToPlayer)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private Player transformPlayerDTOToPlayer(PlayerDTO playerDTO) {
+    private Player transformPlayerDTOToPlayer(final PlayerDTO playerDTO) {
         return Player.builder()
                 .id(playerDTO.getId())
                 .firstName(playerDTO.getFirstName())

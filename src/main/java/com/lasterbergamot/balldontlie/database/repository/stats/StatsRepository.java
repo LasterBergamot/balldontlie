@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface StatsRepository extends JpaRepository<Stats, Integer> {
-    List<Stats> findAllByPlayer(Player player);
+    List<Stats> findAllByPlayer(final Player player);
 }

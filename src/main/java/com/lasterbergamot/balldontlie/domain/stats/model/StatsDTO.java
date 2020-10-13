@@ -9,6 +9,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_AST;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_BLK;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_DREB;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_FGA;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_FGM;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_FG_3_A;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_FG_3_M;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_FG_3_PCT;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_FG_PCT;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_FTA;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_FTM;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_FT_PCT;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_GAME;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_ID;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_MIN;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_OREB;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_PF;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_PLAYER;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_PTS;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_REB;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_STL;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_TEAM;
+import static com.lasterbergamot.balldontlie.util.Constants.JSON_PROPERTY_TURNOVER;
+
 @NoArgsConstructor
 @Getter
 @ToString
@@ -39,18 +63,18 @@ public class StatsDTO {
     private Double freeThrowPercentage;
 
     @JsonCreator
-    public StatsDTO(@JsonProperty("id") Integer id, @JsonProperty("player") Player player,
-                    @JsonProperty("team") Team team, @JsonProperty("game") Game game,
-                    @JsonProperty("min") String minutes, @JsonProperty("pts") Integer points,
-                    @JsonProperty("ast") Integer assists, @JsonProperty("reb") Integer rebounds,
-                    @JsonProperty("dreb") Integer defensiveRebounds, @JsonProperty("oreb") Integer offensiveRebounds,
-                    @JsonProperty("blk") Integer blocks, @JsonProperty("stl") Integer steals,
-                    @JsonProperty("turnover") Integer turnovers, @JsonProperty("pf") Integer personalFouls,
-                    @JsonProperty("fga") Integer fieldGoalsAttempted, @JsonProperty("fgm") Integer fieldGoalsMade,
-                    @JsonProperty("fg_pct") Double fieldGoalPercentage, @JsonProperty("fg3a") Integer threePointersAttempted,
-                    @JsonProperty("fg3m") Integer threePointersMade, @JsonProperty("fg3_pct") Double threePointerPercentage,
-                    @JsonProperty("fta") Integer freeThrowsAttempted, @JsonProperty("ftm") Integer freeThrowsMade,
-                    @JsonProperty("ft_pct") Double freeThrowPercentage) {
+    public StatsDTO(@JsonProperty(JSON_PROPERTY_ID) Integer id, @JsonProperty(JSON_PROPERTY_PLAYER) Player player,
+                    @JsonProperty(JSON_PROPERTY_TEAM) Team team, @JsonProperty(JSON_PROPERTY_GAME) Game game,
+                    @JsonProperty(JSON_PROPERTY_MIN) String minutes, @JsonProperty(JSON_PROPERTY_PTS) Integer points,
+                    @JsonProperty(JSON_PROPERTY_AST) Integer assists, @JsonProperty(JSON_PROPERTY_REB) Integer rebounds,
+                    @JsonProperty(JSON_PROPERTY_DREB) Integer defensiveRebounds, @JsonProperty(JSON_PROPERTY_OREB) Integer offensiveRebounds,
+                    @JsonProperty(JSON_PROPERTY_BLK) Integer blocks, @JsonProperty(JSON_PROPERTY_STL) Integer steals,
+                    @JsonProperty(JSON_PROPERTY_TURNOVER) Integer turnovers, @JsonProperty(JSON_PROPERTY_PF) Integer personalFouls,
+                    @JsonProperty(JSON_PROPERTY_FGA) Integer fieldGoalsAttempted, @JsonProperty(JSON_PROPERTY_FGM) Integer fieldGoalsMade,
+                    @JsonProperty(JSON_PROPERTY_FG_PCT) Double fieldGoalPercentage, @JsonProperty(JSON_PROPERTY_FG_3_A) Integer threePointersAttempted,
+                    @JsonProperty(JSON_PROPERTY_FG_3_M) Integer threePointersMade, @JsonProperty(JSON_PROPERTY_FG_3_PCT) Double threePointerPercentage,
+                    @JsonProperty(JSON_PROPERTY_FTA) Integer freeThrowsAttempted, @JsonProperty(JSON_PROPERTY_FTM) Integer freeThrowsMade,
+                    @JsonProperty(JSON_PROPERTY_FT_PCT) Double freeThrowPercentage) {
         this.id = id;
         this.player = player;
         this.team = team;

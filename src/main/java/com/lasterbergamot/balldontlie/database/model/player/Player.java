@@ -20,8 +20,17 @@ import javax.persistence.Table;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_FIRST_NAME;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_HEIGHT_FEET;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_HEIGHT_INCHES;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_LAST_NAME;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_PLAYER_POSITION;
+import static com.lasterbergamot.balldontlie.util.Constants.COLUMN_WEIGHT_POUNDS;
+import static com.lasterbergamot.balldontlie.util.Constants.JOIN_COLUMN_TEAM_ID;
+import static com.lasterbergamot.balldontlie.util.Constants.TABLE_PLAYER;
+
 @Entity
-@Table(name = "player")
+@Table(name = TABLE_PLAYER)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -35,29 +44,29 @@ public class Player {
     private Integer id;
 
     @NonNull
-    @Column(name = "first_name")
+    @Column(name = COLUMN_FIRST_NAME)
     private String firstName;
 
     @NonNull
-    @Column(name = "last_name")
+    @Column(name = COLUMN_LAST_NAME)
     private String lastName;
 
     @NonNull
-    @Column(name = "player_position")
+    @Column(name = COLUMN_PLAYER_POSITION)
     private String position;
 
-    @Column(name = "height_feet")
+    @Column(name = COLUMN_HEIGHT_FEET)
     private Integer heightFeet;
 
-    @Column(name = "height_inches")
+    @Column(name = COLUMN_HEIGHT_INCHES)
     private Integer heightInches;
 
-    @Column(name = "weight_pounds")
+    @Column(name = COLUMN_WEIGHT_POUNDS)
     private Integer weightPounds;
 
     @NonNull
     @OneToOne
-    @JoinColumn(name = "team_id")
+    @JoinColumn(name = JOIN_COLUMN_TEAM_ID)
     private Team team;
 
     @Override

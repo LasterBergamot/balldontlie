@@ -27,6 +27,14 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static com.lasterbergamot.balldontlie.util.Constants.ATTRIBUTE_FEET;
+import static com.lasterbergamot.balldontlie.util.Constants.ATTRIBUTE_INCHES;
+import static com.lasterbergamot.balldontlie.util.Constants.ATTRIBUTE_WEIGHT;
+import static com.lasterbergamot.balldontlie.util.Constants.ERR_MSG_THE_GIVEN_S_VALUE_IS_NOT_VALID_VALID_VALUES_ARE_IN_THE_RANGE_OF_S;
+import static com.lasterbergamot.balldontlie.util.Constants.ERR_MSG_THE_INCHES_VALUE_IS_PRESENT_WITHOUT_THE_FEET_VALUE;
+import static com.lasterbergamot.balldontlie.util.Constants.ERR_MSG_THE_PLAYER_DTOWRAPPER_OBJECT_GOT_FROM_THE_API_WAS_NULL;
+import static com.lasterbergamot.balldontlie.util.Constants.URL_PLAYERS_BALLDONTLIE_API_PER_PAGE_100_PAGE;
+
 @Service
 @Slf4j
 @AllArgsConstructor
@@ -39,10 +47,10 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
     @Override
     public void getAllPlayersFromBalldontlieAPI() {
         PlayerDTOWrapper playerDTOWrapper = restTemplate
-                .getForObject(String.format("https://www.balldontlie.io/api/v1/players?per_page=100&page=%d", 1), PlayerDTOWrapper.class);
+                .getForObject(String.format(URL_PLAYERS_BALLDONTLIE_API_PER_PAGE_100_PAGE, 1), PlayerDTOWrapper.class);
 
         Optional.ofNullable(playerDTOWrapper)
-                .ifPresentOrElse(this::handlePossibleNewPlayers, () -> log.error("The PlayerDTOWrapper object got from the API was null!"));
+                .ifPresentOrElse(this::handlePossibleNewPlayers, () -> log.error(ERR_MSG_THE_PLAYER_DTOWRAPPER_OBJECT_GOT_FROM_THE_API_WAS_NULL));
     }
 
     @Override
@@ -50,7 +58,7 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
         getAllPlayersFromBalldontlieAPI();
     }
 
-    private void handlePossibleNewPlayers(PlayerDTOWrapper playerDTOWrapper) {
+    private void handlePossibleNewPlayers(final PlayerDTOWrapper playerDTOWrapper) {
         List<Player> currentlySavedPlayers = playerRepository.findAll();
         Meta meta = playerDTOWrapper.getMeta();
 
@@ -75,14 +83,14 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
         }
     }
 
-    private List<CompletableFuture<PlayerDTOWrapper>> createCompletableFuturesFromTheAPICalls(int totalPages) {
+    private List<CompletableFuture<PlayerDTOWrapper>> createCompletableFuturesFromTheAPICalls(final int totalPages) {
         List<CompletableFuture<PlayerDTOWrapper>> completableFutureList = new ArrayList<>();
 
         for (int currentPage = 2; currentPage <= totalPages; currentPage++) {
             int finalCurrentPage = currentPage;
             CompletableFuture<PlayerDTOWrapper> completableFuture = CompletableFuture.supplyAsync(
                     () -> restTemplate
-                            .getForObject(String.format("https://www.balldontlie.io/api/v1/players?per_page=100&page=%d", finalCurrentPage),
+                            .getForObject(String.format(URL_PLAYERS_BALLDONTLIE_API_PER_PAGE_100_PAGE, finalCurrentPage),
                                     PlayerDTOWrapper.class)
             );
 
@@ -97,7 +105,7 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
      * @param completableFutureList
      * @return
      */
-    private CompletableFuture<List<PlayerDTOWrapper>> collectReturnValuesFromAllThreads(List<CompletableFuture<PlayerDTOWrapper>> completableFutureList) {
+    private CompletableFuture<List<PlayerDTOWrapper>> collectReturnValuesFromAllThreads(final List<CompletableFuture<PlayerDTOWrapper>> completableFutureList) {
         return waitForThreadCompletion(completableFutureList).thenApply(
                 future -> completableFutureList
                         .stream()
@@ -111,11 +119,11 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
      * @param completableFutureList
      * @return
      */
-    private CompletableFuture<Void> waitForThreadCompletion(List<CompletableFuture<PlayerDTOWrapper>> completableFutureList) {
+    private CompletableFuture<Void> waitForThreadCompletion(final List<CompletableFuture<PlayerDTOWrapper>> completableFutureList) {
         return CompletableFuture.allOf(completableFutureList.toArray(new CompletableFuture[0]));
     }
 
-    private List<Player> getPlayersFromAPI(PlayerDTOWrapper playerDTOWrapper, CompletableFuture<List<PlayerDTOWrapper>> allCompletableFuture) {
+    private List<Player> getPlayersFromAPI(final PlayerDTOWrapper playerDTOWrapper, final CompletableFuture<List<PlayerDTOWrapper>> allCompletableFuture) {
         List<Player> playersFromAPI = new ArrayList<>();
 
         try {
@@ -146,19 +154,19 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    private void validateQueryParameters(Optional<Integer> minimumFeet, Optional<Integer> minimumInches, Optional<Integer> minimumWeight) {
-        validateQueryParameter(minimumFeet, Range.between(4, 8), "feet");
-        validateQueryParameter(minimumInches, Range.between(0, 11), "inches");
-        validateQueryParameter(minimumWeight, Range.between(150, 400), "weight");
+    private void validateQueryParameters(final Optional<Integer> minimumFeet, final Optional<Integer> minimumInches, final Optional<Integer> minimumWeight) {
+        validateQueryParameter(minimumFeet, Range.between(4, 8), ATTRIBUTE_FEET);
+        validateQueryParameter(minimumInches, Range.between(0, 11), ATTRIBUTE_INCHES);
+        validateQueryParameter(minimumWeight, Range.between(150, 400), ATTRIBUTE_WEIGHT);
 
         if (minimumFeet.isEmpty() && minimumInches.isPresent()) {
-            throw new PlayerQueryException("The inches value is present without the feet value!");
+            throw new PlayerQueryException(ERR_MSG_THE_INCHES_VALUE_IS_PRESENT_WITHOUT_THE_FEET_VALUE);
         }
     }
 
-    private void validateQueryParameter(Optional<Integer> queryParameter, Range<Integer> range, String attribute) {
+    private void validateQueryParameter(final Optional<Integer> queryParameter, final Range<Integer> range, final String attribute) {
         if (queryParameter.isPresent() && !range.contains(queryParameter.get())) {
-            throw new PlayerQueryException(String.format("The given %s value is not valid! Valid values are in the range of %s", attribute, range));
+            throw new PlayerQueryException(String.format(ERR_MSG_THE_GIVEN_S_VALUE_IS_NOT_VALID_VALID_VALUES_ARE_IN_THE_RANGE_OF_S, attribute, range));
         }
     }
 
@@ -170,19 +178,16 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
     }
 
     private Predicate<Player> createHeightPredicate(final Optional<Integer> minimumFeet, final Optional<Integer> minimumInches) {
-        Predicate<Player> heightPredicate = player -> true;
         Height height = Height.convert(minimumFeet.orElse(0), minimumInches.orElse(0));
 
-        if (minimumFeet.isPresent()) {
-            heightPredicate = player -> {
-                Integer feet = Optional.ofNullable(player.getHeightFeet()).orElse(0);
-                Integer inches = Optional.ofNullable(player.getHeightInches()).orElse(0);
+        return minimumFeet.isEmpty()
+                ? player -> true
+                : player -> {
+                    Integer feet = Optional.ofNullable(player.getHeightFeet()).orElse(0);
+                    Integer inches = Optional.ofNullable(player.getHeightInches()).orElse(0);
 
-                return height.compareTo(Height.convert(feet, inches)) <= 0;
-            };
-        }
-
-        return heightPredicate;
+                    return height.compareTo(Height.convert(feet, inches)) <= 0;
+                };
     }
 
     private Predicate<Player> createPredicateFromQueryParameter(final Optional<Integer> queryParameter, final Function<Player, Integer> attributeFunction) {
@@ -192,7 +197,7 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
     }
 
     @Override
-    public List<Player> getPlayers(Team team) {
+    public List<Player> getPlayers(final Team team) {
         return playerRepository.findAllByTeam(team);
     }
 

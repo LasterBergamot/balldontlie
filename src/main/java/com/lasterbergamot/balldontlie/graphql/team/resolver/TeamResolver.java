@@ -15,7 +15,7 @@ public class TeamResolver implements GraphQLResolver<Team> {
 
     private final PlayerService playerService;
 
-    public List<Player> getPlayers(Team team) {
+    public List<Player> getPlayers(final Team team) {
         return playerService.getPlayers(team);
     }
 }

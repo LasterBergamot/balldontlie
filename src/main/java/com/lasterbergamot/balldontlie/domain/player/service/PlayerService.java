@@ -10,6 +10,6 @@ public interface PlayerService {
     void getAllPlayersFromBalldontlieAPI();
 
     List<Player> getPlayers(final Optional<Integer> count, final Optional<Integer> minimumFeet, final Optional<Integer> minimumInches, final Optional<Integer> minimumWeight);
-    List<Player> getPlayers(Team team);
+    List<Player> getPlayers(final Team team);
     Optional<Player> getPlayer(final int id);
 }
