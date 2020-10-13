@@ -6,6 +6,7 @@ import com.lasterbergamot.balldontlie.database.model.team.Team;
 import com.lasterbergamot.balldontlie.database.repository.player.PlayerRepository;
 import com.lasterbergamot.balldontlie.domain.DataImporter;
 import com.lasterbergamot.balldontlie.domain.model.meta.Meta;
+import com.lasterbergamot.balldontlie.domain.player.model.Height;
 import com.lasterbergamot.balldontlie.domain.player.model.PlayerDTOWrapper;
 import com.lasterbergamot.balldontlie.domain.player.service.PlayerService;
 import com.lasterbergamot.balldontlie.domain.player.transform.PlayerTransformer;
@@ -153,28 +154,44 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
     }
 
     private void validateQueryParameters(Optional<Integer> minimumFeet, Optional<Integer> minimumInches, Optional<Integer> minimumWeight) {
-        validateQueryParameter(minimumFeet, Range.between(4, 8), "The given feet value is not valid! Valid values are in the range of ");
-        validateQueryParameter(minimumInches, Range.between(0, 11), "The given inches value is not valid! Valid values are in the range of ");
-        validateQueryParameter(minimumWeight, Range.between(150, 400), "The given weight value is not valid! Valid values are in the range of ");
+        validateQueryParameter(minimumFeet, Range.between(4, 8), "feet");
+        validateQueryParameter(minimumInches, Range.between(0, 11), "inches");
+        validateQueryParameter(minimumWeight, Range.between(150, 400), "weight");
 
         if (minimumFeet.isEmpty() && minimumInches.isPresent()) {
             throw new PlayerQueryException("The inches value is present without the feet value!");
         }
     }
 
-    private void validateQueryParameter(Optional<Integer> queryParameter, Range<Integer> range, String errorMessage) {
+    private void validateQueryParameter(Optional<Integer> queryParameter, Range<Integer> range, String attribute) {
         if (queryParameter.isPresent() && !range.contains(queryParameter.get())) {
-            throw new PlayerQueryException(errorMessage + range);
+            throw new PlayerQueryException(String.format("The given %s value is not valid! Valid values are in the range of %s", attribute, range));
         }
     }
 
     private Predicate<Player> getAttributesPredicate(final Optional<Integer> minimumFeet, final Optional<Integer> minimumInches, final Optional<Integer> minimumWeight) {
-        Predicate<Player> heightPredicate;
-        Predicate<Player> feetPredicate = createPredicateFromQueryParameter(minimumFeet, Player::getHeightFeet);
-        Predicate<Player> inchesPredicate = createPredicateFromQueryParameter(minimumInches, Player::getHeightInches);
+        Predicate<Player> heightPredicate = createHeightPredicate(minimumFeet, minimumInches);
         Predicate<Player> weightPredicate = createPredicateFromQueryParameter(minimumWeight, Player::getWeightPounds);
 
-        return feetPredicate.and(inchesPredicate).and(weightPredicate);
+        return heightPredicate.and(weightPredicate);
+    }
+
+    private Predicate<Player> createHeightPredicate(final Optional<Integer> minimumFeet, final Optional<Integer> minimumInches) {
+        Predicate<Player> heightPredicate = player -> true;
+        Height height = Height.convert(minimumFeet.orElse(0), minimumInches.orElse(0));
+
+        if (minimumFeet.isPresent() && minimumInches.isPresent()) {
+            heightPredicate = player -> {
+                Integer feet = Optional.ofNullable(player.getHeightFeet()).orElse(0);
+                Integer inches = Optional.ofNullable(player.getHeightInches()).orElse(0);
+
+                return height.compareTo(Height.convert(feet, inches)) >= 0;
+            };
+        } else if (minimumFeet.isPresent()) {
+            heightPredicate = createPredicateFromQueryParameter(minimumFeet, Player::getHeightFeet);;
+        }
+
+        return heightPredicate;
     }
 
     private Predicate<Player> createPredicateFromQueryParameter(final Optional<Integer> queryParameter, final Function<Player, Integer> attributeFunction) {
