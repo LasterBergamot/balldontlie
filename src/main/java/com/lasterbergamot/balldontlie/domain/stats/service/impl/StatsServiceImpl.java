@@ -23,7 +23,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import static com.lasterbergamot.balldontlie.util.Constants.ERR_MSG_THE_STATS_DTOWRAPPER_OBJECT_GOT_FROM_THE_API_WAS_NULL;
@@ -113,14 +112,8 @@ public class StatsServiceImpl implements StatsService, DataImporter {
 
     private List<CompletableFuture<StatsDTOWrapper>> createCompletableFuturesFromTheAPICalls(final Integer totalPages) {
         List<CompletableFuture<StatsDTOWrapper>> completableFutureList = new ArrayList<>();
-        int maxNumberOfRequests = Math.min(totalPages, 13);
 
-        int min = 2;
-        int max = totalPages - maxNumberOfRequests;
-        int minLimit = ThreadLocalRandom.current().nextInt(max - min) + min;
-        int maxLimit = minLimit + maxNumberOfRequests;
-
-        for (int currentPage = minLimit; currentPage <= maxLimit; currentPage++) {
+        for (int currentPage = 2; currentPage <= totalPages; currentPage++) {
             int finalCurrentPage = currentPage;
             CompletableFuture<StatsDTOWrapper> completableFuture = CompletableFuture.supplyAsync(
                     () -> restTemplate
