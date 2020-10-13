@@ -185,7 +185,7 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
                 Integer feet = Optional.ofNullable(player.getHeightFeet()).orElse(0);
                 Integer inches = Optional.ofNullable(player.getHeightInches()).orElse(0);
 
-                return height.compareTo(Height.convert(feet, inches)) >= 0;
+                return height.compareTo(Height.convert(feet, inches)) <= 0;
             };
         } else if (minimumFeet.isPresent()) {
             heightPredicate = createPredicateFromQueryParameter(minimumFeet, Player::getHeightFeet);;
