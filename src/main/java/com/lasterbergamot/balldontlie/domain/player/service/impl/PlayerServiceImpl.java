@@ -6,11 +6,14 @@ import com.lasterbergamot.balldontlie.database.model.team.Team;
 import com.lasterbergamot.balldontlie.database.repository.player.PlayerRepository;
 import com.lasterbergamot.balldontlie.domain.DataImporter;
 import com.lasterbergamot.balldontlie.domain.model.meta.Meta;
+import com.lasterbergamot.balldontlie.domain.player.model.Height;
 import com.lasterbergamot.balldontlie.domain.player.model.PlayerDTOWrapper;
 import com.lasterbergamot.balldontlie.domain.player.service.PlayerService;
 import com.lasterbergamot.balldontlie.domain.player.transform.PlayerTransformer;
+import com.lasterbergamot.balldontlie.graphql.player.exception.PlayerQueryException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.Range;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +23,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -130,12 +135,60 @@ public class PlayerServiceImpl implements PlayerService, DataImporter {
     }
 
     @Override
-    public List<Player> getPlayers(final Optional<Integer> count) {
+    public List<Player> getPlayers(final Optional<Integer> count, final Optional<Integer> minimumFeet, final Optional<Integer> minimumInches, final Optional<Integer> minimumWeight) {
+        validateQueryParameters(minimumFeet, minimumInches, minimumWeight);
+
         return playerRepository
                 .findAll()
                 .stream()
+                .filter(getAttributesPredicate(minimumFeet, minimumInches, minimumWeight))
                 .limit(count.orElse(Integer.MAX_VALUE))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    private void validateQueryParameters(Optional<Integer> minimumFeet, Optional<Integer> minimumInches, Optional<Integer> minimumWeight) {
+        validateQueryParameter(minimumFeet, Range.between(4, 8), "feet");
+        validateQueryParameter(minimumInches, Range.between(0, 11), "inches");
+        validateQueryParameter(minimumWeight, Range.between(150, 400), "weight");
+
+        if (minimumFeet.isEmpty() && minimumInches.isPresent()) {
+            throw new PlayerQueryException("The inches value is present without the feet value!");
+        }
+    }
+
+    private void validateQueryParameter(Optional<Integer> queryParameter, Range<Integer> range, String attribute) {
+        if (queryParameter.isPresent() && !range.contains(queryParameter.get())) {
+            throw new PlayerQueryException(String.format("The given %s value is not valid! Valid values are in the range of %s", attribute, range));
+        }
+    }
+
+    private Predicate<Player> getAttributesPredicate(final Optional<Integer> minimumFeet, final Optional<Integer> minimumInches, final Optional<Integer> minimumWeight) {
+        Predicate<Player> heightPredicate = createHeightPredicate(minimumFeet, minimumInches);
+        Predicate<Player> weightPredicate = createPredicateFromQueryParameter(minimumWeight, Player::getWeightPounds);
+
+        return heightPredicate.and(weightPredicate);
+    }
+
+    private Predicate<Player> createHeightPredicate(final Optional<Integer> minimumFeet, final Optional<Integer> minimumInches) {
+        Predicate<Player> heightPredicate = player -> true;
+        Height height = Height.convert(minimumFeet.orElse(0), minimumInches.orElse(0));
+
+        if (minimumFeet.isPresent()) {
+            heightPredicate = player -> {
+                Integer feet = Optional.ofNullable(player.getHeightFeet()).orElse(0);
+                Integer inches = Optional.ofNullable(player.getHeightInches()).orElse(0);
+
+                return height.compareTo(Height.convert(feet, inches)) <= 0;
+            };
+        }
+
+        return heightPredicate;
+    }
+
+    private Predicate<Player> createPredicateFromQueryParameter(final Optional<Integer> queryParameter, final Function<Player, Integer> attributeFunction) {
+        return queryParameter.isEmpty()
+                ? player -> true
+                : player -> Optional.ofNullable(attributeFunction.apply(player)).orElse(0) >= queryParameter.get();
     }
 
     @Override

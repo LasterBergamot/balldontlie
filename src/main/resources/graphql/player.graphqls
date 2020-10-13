@@ -3,8 +3,8 @@ type Player {
     firstName: String!,
     lastName: String!,
     position: String!,
-    heightFeet: Int!,
-    heightInches: Int!,
+    heightFeet: Int,
+    heightInches: Int,
     weight: Weight!
     team: Team!,
     games: [Game]!,
@@ -12,8 +12,7 @@ type Player {
 }
 
 extend type Query {
-    # Give -1 to get all players.
-    players(count: Int): [Player]
+    players(count: Int, minimumFeet: Int, minimumInches: Int, minimumWeight: Int): [Player]
     player(id: ID): Player
 }
 

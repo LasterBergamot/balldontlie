@@ -15,8 +15,8 @@ public class PlayerQuery implements GraphQLQueryResolver {
 
     private final PlayerService playerService;
 
-    public List<Player> players(final Optional<Integer> count) {
-        return playerService.getPlayers(count);
+    public List<Player> players(final Optional<Integer> count, final Optional<Integer> minimumFeet, final Optional<Integer> minimumInches, final Optional<Integer> minimumWeight) {
+        return playerService.getPlayers(count, minimumFeet, minimumInches, minimumWeight);
     }
 
     public Optional<Player> player(final int id) {

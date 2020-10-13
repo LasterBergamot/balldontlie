@@ -25,7 +25,6 @@ type Stats {
 }
 
 extend type Query {
-    # Give -1 to get all stats.
     allStats(count: Int): [Stats]
     stats(id: ID): Stats
 }
