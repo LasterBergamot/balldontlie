@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GameService {
-    void getAllGamesFromBalldontlieAPI();
+    void getAllGames();
 
     List<Game> getGames(final Player player);
     List<Game> getGames(final Optional<Integer> count);

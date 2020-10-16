@@ -46,12 +46,36 @@ public class GameServiceImpl implements GameService, DataImporter {
     private final ThrottledRestTemplate restTemplate;
 
     @Override
-    public void getAllGamesFromBalldontlieAPI() {
-        GameDTOWrapper gameDTOWrapper = restTemplate
-                .getForObject(String.format(URL_GAME_BALLDONTLIE_API_PER_PAGE_100_PAGE, 1), GameDTOWrapper.class);
+    public void getAllGames() {
+        List<Game> currentlySavedGames = gameRepository.findAll();
+        List<Game> retrievedGames = retrieveGames();
 
-        Optional.ofNullable(gameDTOWrapper)
-                .ifPresentOrElse(this::handlePossibleNewGames, () -> log.error(ERR_MSG_THE_GAME_DTOWRAPPER_GOT_FROM_THE_API_WAS_NULL));
+        Set<Game> gamesToSave = new HashSet<>(retrievedGames);
+        gamesToSave.removeAll(currentlySavedGames);
+
+        if (gamesToSave.size() > 0) {
+            log.info("New games are available!");
+            gameRepository.saveAll(List.copyOf(gamesToSave));
+            log.info("Saved {} new games!", gamesToSave.size());
+        } else {
+            log.info("No new games are available!");
+        }
+    }
+
+    private List<Game> retrieveGames() {
+        Meta meta = Optional.ofNullable(restTemplate.getForObject(String.format(URL_GAME_BALLDONTLIE_API_PER_PAGE_100_PAGE, 1), GameDTOWrapper.class))
+                .map(GameDTOWrapper::getMeta)
+                .orElse(null);
+
+        if (meta == null) {
+            log.error(ERR_MSG_THE_GAME_DTOWRAPPER_GOT_FROM_THE_API_WAS_NULL);
+            return new ArrayList<>();
+        }
+
+        List<CompletableFuture<GameDTOWrapper>> completableFutureList = createCompletableFuturesFromTheAPICalls(meta.getTotalPages());
+        CompletableFuture<List<GameDTOWrapper>> allCompletableFuture = collectReturnValuesFromAllThreads(completableFutureList);
+
+        return getGamesFromAPI(allCompletableFuture);
     }
 
     @Override
@@ -139,40 +163,15 @@ public class GameServiceImpl implements GameService, DataImporter {
                 .build();
     }
 
-    private void handlePossibleNewGames(final GameDTOWrapper gameDTOWrapper) {
-        List<Game> currentlySavedGames = gameRepository.findAll();
-        Meta meta = gameDTOWrapper.getMeta();
-
-        log.info("Checking for possible new games!");
-        if (currentlySavedGames.size() < meta.getTotalCount()) {
-            List<CompletableFuture<GameDTOWrapper>> completableFutureList = createCompletableFuturesFromTheAPICalls(meta.getTotalPages());
-            CompletableFuture<List<GameDTOWrapper>> allCompletableFuture = collectReturnValuesFromAllThreads(completableFutureList);
-            List<Game> gamesFromAPI = getGamesFromAPI(gameDTOWrapper, allCompletableFuture);
-
-            Set<Game> gamesToSave = new HashSet<>(gamesFromAPI);
-            gamesToSave.removeAll(currentlySavedGames);
-
-            if (gamesToSave.size() > 0) {
-                log.info("New games are available!");
-                gameRepository.saveAll(List.copyOf(gamesToSave));
-                log.info("Saved {} new games!", gamesToSave.size());
-            } else {
-                log.info("No new games are available!");
-            }
-        } else {
-            log.info("No new games are available!");
-        }
-    }
-
     @Override
     public void doImport() {
-        getAllGamesFromBalldontlieAPI();
+        getAllGames();
     }
 
     private List<CompletableFuture<GameDTOWrapper>> createCompletableFuturesFromTheAPICalls(final int totalPages) {
         List<CompletableFuture<GameDTOWrapper>> completableFutureList = new ArrayList<>();
 
-        for (int currentPage = 2; currentPage <= totalPages; currentPage++) {
+        for (int currentPage = 1; currentPage <= totalPages; currentPage++) {
             int finalCurrentPage = currentPage;
             CompletableFuture<GameDTOWrapper> completableFuture = CompletableFuture.supplyAsync(
                     () -> restTemplate
@@ -198,12 +197,11 @@ public class GameServiceImpl implements GameService, DataImporter {
         return CompletableFuture.allOf(completableFutureList.toArray(new CompletableFuture[0]));
     }
 
-    private List<Game> getGamesFromAPI(final GameDTOWrapper gameDTOWrapper, final CompletableFuture<List<GameDTOWrapper>> allCompletableFuture) {
+    private List<Game> getGamesFromAPI(final CompletableFuture<List<GameDTOWrapper>> allCompletableFuture) {
         List<Game> gamesFromAPI = new ArrayList<>();
 
         try {
             List<GameDTOWrapper> gameDTOWrappers = allCompletableFuture.toCompletableFuture().get();
-            gameDTOWrappers.add(0, gameDTOWrapper);
 
             gameDTOWrappers.forEach(
                     gameDTOWrapper1 -> gamesFromAPI.addAll(gameTransformer.transformGameDTOListToGameList(gameDTOWrapper1.getGameDTOs()))
