@@ -1,5 +1,5 @@
 # balldontlie
-GraphQL-java demo project with Spring Boot and balldontlie API. 
+GraphQL-java demo project with Spring Boot and balldontlie API.
 
 ## Basic information
 To run this project, you have to set up a PostgreSQL database with the following parameters:
